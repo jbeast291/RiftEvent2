@@ -1,6 +1,7 @@
 package RiftEvent2;
 
 import Commands.RiftEventCmd;
+import InstabilityUtils.InstabilityEvent.NpcHandler;
 import InstabilityUtils.InstabilityUtils;
 import WorldUtils.WorldUtils;
 import org.bukkit.Location;
@@ -15,6 +16,7 @@ public final class RiftEvent2 extends JavaPlugin {
     private static RiftEvent2 instance;
     private static WorldUtils WorldUtilsInstance;
     private static InstabilityUtils InstabilityInstance;
+    private static NpcHandler NpcHandlerInstance;
 
     public String WorldName = "RiftEvent";
 
@@ -59,9 +61,11 @@ public final class RiftEvent2 extends JavaPlugin {
         instance = this;
         WorldUtilsInstance = new WorldUtils();
         InstabilityInstance = new InstabilityUtils();
+        NpcHandlerInstance = new NpcHandler();
 
         WorldUtilsInstance.resetRiftEvent(WorldName, Structures);
         InstabilityInstance.setupBossBar();
+
 
         //commands
         getCommand("riftevent").setExecutor(new RiftEventCmd());
@@ -69,6 +73,7 @@ public final class RiftEvent2 extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        getServer().getScheduler().cancelTasks(this);
         // Plugin shutdown logic
     }
 
@@ -82,5 +87,9 @@ public final class RiftEvent2 extends JavaPlugin {
 
     public static WorldUtils getWorldUtilsInstanceInstance() {
         return WorldUtilsInstance;
+    }
+
+    public static NpcHandler getNpcHandlerInstance() {
+        return NpcHandlerInstance;
     }
 }

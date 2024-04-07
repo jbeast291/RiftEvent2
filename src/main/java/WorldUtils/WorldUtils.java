@@ -50,8 +50,6 @@ public class WorldUtils {
         Bukkit.getLogger().info("" + worldType);
         Bukkit.getLogger().info("" + StructureLoc);
 
-
-
     }
 
     //use to safely unload world to ensure the world is fully unloaded before scheduling a reset

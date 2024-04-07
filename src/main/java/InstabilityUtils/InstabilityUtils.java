@@ -30,7 +30,14 @@ public class InstabilityUtils {
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 50%");
                         }
                         if(currentInstabilityPercent == 60){
+                            BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 60%");
 
+                        }
+                        if(currentInstabilityPercent == 60){
+                            BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 70%");
+                        }
+                        if(currentInstabilityPercent == 60){
+                            BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 50%");
                         }
                         instabilityTicker();
 
@@ -83,5 +90,11 @@ public class InstabilityUtils {
         Riftworld.getPlayers().forEach(player -> {
             player.sendMessage(message);
         });
+    }
+    public void startRandomMinorEvent() {
+
+    }
+    public void StartRandomMajorEvent() {
+
     }
 }

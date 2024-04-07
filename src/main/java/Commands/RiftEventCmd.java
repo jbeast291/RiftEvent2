@@ -1,7 +1,7 @@
 package Commands;
 
+import InstabilityUtils.InstabilityEvent.NpcHandler;
 import RiftEvent2.RiftEvent2;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,7 +17,7 @@ public class RiftEventCmd implements CommandExecutor {
                 return false;
                 // could probably have this show like a help page that shows all the available arguments for this command
             }
-            if (args[0].equalsIgnoreCase("DEBUG")) {
+            if (args[0].equalsIgnoreCase("enter")) {
                 Player player = (Player) sender;
                 RiftEvent2.getInstabilityUtilInstance().bossBar.addPlayer(player);
                 player.teleport(RiftEvent2.getInstance().RiftCenter);
@@ -26,6 +26,14 @@ public class RiftEventCmd implements CommandExecutor {
                 Player player = (Player) sender;
                 RiftEvent2.getWorldUtilsInstanceInstance().unloadworldandshedulereset();
             }
+            if (args[0].equalsIgnoreCase("DEBUG")) {
+                Player player = (Player) sender;
+                RiftEvent2.getNpcHandlerInstance().PlaceNpcsAroundPlayer(player);
+            }
+            if (args[0].equalsIgnoreCase("DEBUG2")) {
+                RiftEvent2.getNpcHandlerInstance().CancelAllTasksAndRemoveNpcs();
+            }
+
 
         }
         return true;

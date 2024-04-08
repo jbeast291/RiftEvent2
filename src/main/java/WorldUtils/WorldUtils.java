@@ -53,7 +53,7 @@ public class WorldUtils {
     }
 
     //use to safely unload world to ensure the world is fully unloaded before scheduling a reset
-    public void unloadworldandshedulereset() {
+    public void unloadWorldAndSheduleReset() {
 
         Bukkit.unloadWorld(RiftEvent2.getInstance().WorldName, false);//no need to save chunks if the world is being reset
 

@@ -24,14 +24,15 @@ public class RiftEventCmd implements CommandExecutor {
             }
             if (args[0].equalsIgnoreCase("ResetRift")) {
                 Player player = (Player) sender;
-                RiftEvent2.getWorldUtilsInstanceInstance().unloadworldandshedulereset();
+                RiftEvent2.getWorldUtilsInstanceInstance().unloadWorldAndSheduleReset();
             }
             if (args[0].equalsIgnoreCase("DEBUG")) {
                 Player player = (Player) sender;
-                RiftEvent2.getNpcHandlerInstance().PlaceNpcsAroundPlayer(player);
+                RiftEvent2.getSoundEventInstance().LoopRandomSound(player);
             }
             if (args[0].equalsIgnoreCase("DEBUG2")) {
-                RiftEvent2.getNpcHandlerInstance().CancelAllTasksAndRemoveNpcs();
+                Player player = (Player) sender;
+                RiftEvent2.getSoundEventInstance().PlayRandomSoundOnce(player);
             }
 
 

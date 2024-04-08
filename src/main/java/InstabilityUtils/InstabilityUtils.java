@@ -31,13 +31,6 @@ public class InstabilityUtils {
                         }
                         if(currentInstabilityPercent == 60){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 60%");
-
-                        }
-                        if(currentInstabilityPercent == 60){
-                            BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 70%");
-                        }
-                        if(currentInstabilityPercent == 60){
-                            BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 50%");
                         }
                         instabilityTicker();
 

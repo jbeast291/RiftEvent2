@@ -2,6 +2,7 @@ package RiftEvent2;
 
 import Commands.RiftEventCmd;
 import InstabilityUtils.InstabilityEvent.NpcHandler;
+import InstabilityUtils.InstabilityEvent.SoundEvent;
 import InstabilityUtils.InstabilityUtils;
 import WorldUtils.WorldUtils;
 import org.bukkit.Location;
@@ -17,6 +18,7 @@ public final class RiftEvent2 extends JavaPlugin {
     private static WorldUtils WorldUtilsInstance;
     private static InstabilityUtils InstabilityInstance;
     private static NpcHandler NpcHandlerInstance;
+    private static SoundEvent SoundEventInstance;
 
     public String WorldName = "RiftEvent";
 
@@ -62,6 +64,7 @@ public final class RiftEvent2 extends JavaPlugin {
         WorldUtilsInstance = new WorldUtils();
         InstabilityInstance = new InstabilityUtils();
         NpcHandlerInstance = new NpcHandler();
+        SoundEventInstance = new SoundEvent();
 
         WorldUtilsInstance.resetRiftEvent(WorldName, Structures);
         InstabilityInstance.setupBossBar();
@@ -91,5 +94,8 @@ public final class RiftEvent2 extends JavaPlugin {
 
     public static NpcHandler getNpcHandlerInstance() {
         return NpcHandlerInstance;
+    }
+    public static SoundEvent getSoundEventInstance() {
+        return SoundEventInstance;
     }
 }

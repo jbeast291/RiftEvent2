@@ -57,6 +57,9 @@ public class SoundEvent {
     public void PlayRandomSoundOnce(Player player) {
         player.playSound(player, getRandomSound(sounds), 1, 1);
     }
+    public void PlayCaveSoundOnce(Player player){
+        player.playSound(player, Sound.AMBIENT_CAVE, 1, 1);
+    }
     public static Sound getRandomSound(List<Sound> sounds){
 
         int max = sounds.size() - 1;

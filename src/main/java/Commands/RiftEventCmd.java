@@ -1,5 +1,6 @@
 package Commands;
 
+import InstabilityUtils.InstabilityEvent.AnimalEvent;
 import InstabilityUtils.InstabilityEvent.NpcHandler;
 import RiftEvent2.RiftEvent2;
 import org.bukkit.command.Command;
@@ -27,8 +28,7 @@ public class RiftEventCmd implements CommandExecutor {
                 RiftEvent2.getWorldUtilsInstanceInstance().unloadWorldAndSheduleReset();
             }
             if (args[0].equalsIgnoreCase("DEBUG")) {
-                Player player = (Player) sender;
-                RiftEvent2.getSoundEventInstance().LoopRandomSound(player);
+                AnimalEvent.AnimalSpawner();
             }
             if (args[0].equalsIgnoreCase("DEBUG2")) {
                 Player player = (Player) sender;

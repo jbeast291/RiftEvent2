@@ -11,9 +11,14 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-public class InstabilityUtils {
+public class InstabilityHandler {
     public BossBar bossBar;
     int currentInstabilityPercent = RiftEvent2.getInstance().percentInstab;
+    //50% one-off minor event
+    //60% 2 one-off minor event, Minor Event Loop
+    //70% 2 Minor Event Loop
+    //80% 3 one-off minor event, one Major Event loop
+    //90%
     public void instabilityTicker(){
         try {
             BukkitTask task = new BukkitRunnable() {
@@ -31,6 +36,15 @@ public class InstabilityUtils {
                         }
                         if(currentInstabilityPercent == 60){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 60%");
+                        }
+                        if(currentInstabilityPercent == 70){
+                            BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 70%");
+                        }
+                        if(currentInstabilityPercent == 80){
+                            BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 80%");
+                        }
+                        if(currentInstabilityPercent == 90){
+                            BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 90%");
                         }
                         instabilityTicker();
 
@@ -84,10 +98,23 @@ public class InstabilityUtils {
             player.sendMessage(message);
         });
     }
-    public void startRandomMinorEvent() {
+
+    //Single sound, single effect, cave noise, chat
+    public void RandomMinorEvent() {
 
     }
-    public void StartRandomMajorEvent() {
+    //Npc spawn, inventory fill, particle event
+    public void RandomMajorEvent() {
+
+    }
+    //Each cannot be activated twice
+    //Sky/weather changing constantly, Sound looper, inventory spam loop,
+    public void startLoopedRandomMinorEvent() {
+
+    }
+    //Each cannot be activated twice
+    //Chat Spam, Effect Loop, lighting spam, break block
+    public void StartLoopedRandomMajorEvent() {
 
     }
 }

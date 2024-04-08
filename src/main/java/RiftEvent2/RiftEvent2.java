@@ -3,7 +3,7 @@ package RiftEvent2;
 import Commands.RiftEventCmd;
 import InstabilityUtils.InstabilityEvent.NpcHandler;
 import InstabilityUtils.InstabilityEvent.SoundEvent;
-import InstabilityUtils.InstabilityUtils;
+import InstabilityUtils.InstabilityHandler;
 import WorldUtils.WorldUtils;
 import org.bukkit.Location;
 import org.bukkit.generator.structure.Structure;
@@ -16,7 +16,7 @@ public final class RiftEvent2 extends JavaPlugin {
 
     private static RiftEvent2 instance;
     private static WorldUtils WorldUtilsInstance;
-    private static InstabilityUtils InstabilityInstance;
+    private static InstabilityHandler InstabilityInstance;
     private static NpcHandler NpcHandlerInstance;
     private static SoundEvent SoundEventInstance;
 
@@ -62,7 +62,7 @@ public final class RiftEvent2 extends JavaPlugin {
         //Instances
         instance = this;
         WorldUtilsInstance = new WorldUtils();
-        InstabilityInstance = new InstabilityUtils();
+        InstabilityInstance = new InstabilityHandler();
         NpcHandlerInstance = new NpcHandler();
         SoundEventInstance = new SoundEvent();
 
@@ -84,7 +84,7 @@ public final class RiftEvent2 extends JavaPlugin {
         return instance;
     }
 
-    public static InstabilityUtils getInstabilityUtilInstance() {
+    public static InstabilityHandler getInstabilityUtilInstance() {
         return InstabilityInstance;
     }
 

@@ -2,6 +2,7 @@ package InstabilityUtils.InstabilityEvent;
 
 import GenericUtils.RandomUtils;
 import RiftEvent2.RiftEvent2;
+import net.citizensnpcs.api.CitizensAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.structure.Structure;
@@ -37,28 +38,36 @@ public class SoundEvent {
         add(Sound.ENTITY_LIGHTNING_BOLT_IMPACT);
         add(Sound.ENTITY_LIGHTNING_BOLT_THUNDER);
     }};
-    public void SoundLooper(Player player, Sound sound){
+
+    public void SoundLooper(){
         try {
             BukkitTask task = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    player.playSound(player, sound, 1, 1);
-                    SoundLooper(player, getRandomSound(sounds));
+                    Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
+                        player.playSound(player, getRandomSound(sounds), 1, 1);
+                    });
+                    SoundLooper();
                 }
-            }.runTaskLater(RiftEvent2.getInstance(), 400 + RandomUtils.Randomint(0, 200));
+            }.runTaskLater(RiftEvent2.getInstance(), 150 + RandomUtils.Randomint(100, 0));
+            SoundLoopTasks.add(task.getTaskId());
         } catch (UnsupportedOperationException e) {
             // Log a warning message
             Bukkit.getLogger().warning("[RiftEvent] Failed to schedule sound loop: " + e.getMessage());
         }
     }
-    public void LoopRandomSound(Player player) {
-        SoundLooper(player, getRandomSound(sounds));
+    public List<Integer> SoundLoopTasks = new ArrayList<Integer>();
+
+    public void CancelAllTasks() {
+        SoundLoopTasks.forEach(taskId -> {
+            Bukkit.getScheduler().cancelTask(taskId);
+        });
+        SoundLoopTasks.clear();
     }
-    public void PlayRandomSoundOnce(Player player) {
-        player.playSound(player, getRandomSound(sounds), 1, 1);
-    }
-    public void PlayCaveSoundOnce(Player player){
-        player.playSound(player, Sound.AMBIENT_CAVE, 1, 1);
+    public void PlayCaveSoundOnce(){
+        Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
+            player.playSound(player, Sound.AMBIENT_CAVE, 1, 1);
+        });
     }
     public static Sound getRandomSound(List<Sound> sounds){
 

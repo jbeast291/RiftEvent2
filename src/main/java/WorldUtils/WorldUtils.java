@@ -29,6 +29,11 @@ public class WorldUtils {
             SelectedEnviroment = World.Environment.THE_END;
         }
 
+        if(SelectedStructure == Structure.MONUMENT){
+            RiftEvent2.getInstance().isOcean = true;
+        }
+
+
         //world type
         WorldType worldType = getRandomWorldType();
 
@@ -44,17 +49,22 @@ public class WorldUtils {
 
         RiftEvent2.getInstabilityUtilInstance().instabilityTicker();
 
+        centerWorldBorderAndWorldSpawn(RiftEvent2.getInstance().RiftCenter, 500);
+
         RiftEvent2.getInstance().gameState = 1;
 
-        Bukkit.getLogger().info("" + SelectedStructure.getKey());
-        Bukkit.getLogger().info("" + worldType);
-        Bukkit.getLogger().info("" + StructureLoc);
+        Bukkit.getLogger().info("---NEW RIFT IS ACTIVE---");
+
+        Bukkit.getLogger().info("Structure Name:" + SelectedStructure.getKey());
+        Bukkit.getLogger().info("World Type:" + worldType);
+        Bukkit.getLogger().info("Structure Location: " + StructureLoc);
 
     }
 
     //use to safely unload world to ensure the world is fully unloaded before scheduling a reset
     public void unloadWorldAndSheduleReset() {
 
+        Bukkit.getLogger().info("Unloading Rift Event World...");
         Bukkit.unloadWorld(RiftEvent2.getInstance().WorldName, false);//no need to save chunks if the world is being reset
 
         //have to wait to delete folder as unloading the world is not instant, 5 seconds is a generous ammount
@@ -62,6 +72,7 @@ public class WorldUtils {
             BukkitTask task = new BukkitRunnable() {
                 @Override
                 public void run() {
+                    Bukkit.getLogger().info("Creating new Rift Event World...");
                     resetRiftEvent(RiftEvent2.getInstance().WorldName, RiftEvent2.getInstance().Structures);
                 }
             }.runTaskLater(RiftEvent2.getInstance(), 5 * 20);

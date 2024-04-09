@@ -1,5 +1,4 @@
 package InstabilityUtils.InstabilityEvent;
 
-public class Block {
-    
+public class ParticleEvent {
 }

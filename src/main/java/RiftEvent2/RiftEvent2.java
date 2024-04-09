@@ -1,8 +1,7 @@
 package RiftEvent2;
 
 import Commands.RiftEventCmd;
-import InstabilityUtils.InstabilityEvent.NpcHandler;
-import InstabilityUtils.InstabilityEvent.SoundEvent;
+import InstabilityUtils.InstabilityEvent.*;
 import InstabilityUtils.InstabilityHandler;
 import WorldUtils.WorldUtils;
 import org.bukkit.Location;
@@ -19,6 +18,9 @@ public final class RiftEvent2 extends JavaPlugin {
     private static InstabilityHandler InstabilityInstance;
     private static NpcHandler NpcHandlerInstance;
     private static SoundEvent SoundEventInstance;
+    private static AnimalEvent AnimalEventInstance;
+    private static BlockEvent BlockEventInstance;
+    private static ChunkEvent ChunkEventInstance;
 
     public String WorldName = "RiftEvent";
 
@@ -32,43 +34,45 @@ public final class RiftEvent2 extends JavaPlugin {
     }};
 
     //How long the rift should stay open, once loaded, in minutes
-    public static int TimeRiftOpenMin = 1;
+    public static int TimeRiftOpenMin = 2;
 
     public Location RiftCenter;
 
     //Current Rift info
     //-----------
 
-    public int time;
-
         // -1 Inactive
         // 0: starting up/shuting down
         // 1: Active
     public int gameState;
-
     public String structureName;
-
-    public int spawnX;
-    public int spawnY;
-    public int spawnZ;
     public boolean isNether;
     public boolean isEnd;
+    public boolean isOcean;
     public int percentInstab;
 
     //-----------
 
     @Override
     public void onEnable() {
+
+        saveDefaultConfig();
+
         //Instances
         instance = this;
         WorldUtilsInstance = new WorldUtils();
         InstabilityInstance = new InstabilityHandler();
         NpcHandlerInstance = new NpcHandler();
         SoundEventInstance = new SoundEvent();
+        AnimalEventInstance = new AnimalEvent();
+        BlockEventInstance = new BlockEvent(this);//implements listener
+        ChunkEventInstance = new ChunkEvent();
 
-        WorldUtilsInstance.resetRiftEvent(WorldName, Structures);
+        //
+        InstabilityInstance.OpenRift();
         InstabilityInstance.setupBossBar();
 
+        //TEMP
 
         //commands
         getCommand("riftevent").setExecutor(new RiftEventCmd());
@@ -97,5 +101,14 @@ public final class RiftEvent2 extends JavaPlugin {
     }
     public static SoundEvent getSoundEventInstance() {
         return SoundEventInstance;
+    }
+    public static AnimalEvent getAnimalEventInstance() {
+        return AnimalEventInstance;
+    }
+    public static BlockEvent getBlockEventInstance() {
+        return BlockEventInstance;
+    }
+    public static ChunkEvent getChunkEventInstance() {
+        return ChunkEventInstance;
     }
 }

@@ -8,9 +8,12 @@ import net.citizensnpcs.trait.LookClose;
 import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -62,7 +65,6 @@ public class NpcHandler {
                         "A6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzI" +
                         "wMGFlZmQ5ZGFmOGIwMWI0NzhhMDkwMDg5YjMwNDI4NDk0MDFmNWU4YTc5" +
                         "ZDQyNDRlYmU3NDRiZmUzODEwOTIiCiAgICB9CiAgfQp9");
-        //https://mineskin.org/
         //https://mineskin.org/e6129e39b40443f2973515239a957bd0
 
         //add npc to list
@@ -76,10 +78,15 @@ public class NpcHandler {
             BukkitTask task = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if(player == null)
+                    if(!player.isOnline()) {
+                        scheduleNpcMoveToPlayer(npc, player);
                         return;
-                    if(player.getWorld() != Bukkit.getWorld(RiftEvent2.getInstance().WorldName))
+                    }
+                    if(player.getWorld() != Bukkit.getWorld(RiftEvent2.getInstance().WorldName)) {
+                        scheduleNpcMoveToPlayer(npc, player);
                         return;
+                    }
+
                     if(!npc.isSpawned() || !npc.getNavigator().canNavigateTo(player.getLocation())) {
                         scheduleNpcMoveToPlayer(npc, player);
                         return;
@@ -87,7 +94,7 @@ public class NpcHandler {
                     npc.getNavigator().setTarget(player.getLocation());
                     scheduleNpcMoveToPlayer(npc, player);
                 }
-            }.runTaskLater(RiftEvent2.getInstance(), 200 + RandomUtils.Randomint(0, 60));
+            }.runTaskLater(RiftEvent2.getInstance(), 200 + RandomUtils.Randomint(60, 0));
             MoveTasks.add(task.getTaskId());
         } catch (UnsupportedOperationException e) {
             // Log a warning message
@@ -107,9 +114,23 @@ public class NpcHandler {
         MoveTasks.clear();
         NpcIds.clear();
     }
-    public void PlaceNpcsAroundPlayer(Player player) {
-        generateNPC(new Location(player.getWorld(), player.getLocation().x() + 1, player.getLocation().y(), player.getLocation().z()), player);
-        generateNPC(new Location(player.getWorld(), player.getLocation().x() - 1, player.getLocation().y(), player.getLocation().z() + 1), player);
-        generateNPC(new Location(player.getWorld(), player.getLocation().x() - 1, player.getLocation().y(), player.getLocation().z() - 1), player);
+    public void PlaceNpcsAroundPlayer() {
+        Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 60, 1, false, false));
+            try {
+                BukkitTask task = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        player.playSound(player, Sound.AMBIENT_WARPED_FOREST_MOOD, 1, 1);
+                        generateNPC(new Location(player.getWorld(), player.getLocation().x() + 1, player.getLocation().y(), player.getLocation().z()), player);
+                        generateNPC(new Location(player.getWorld(), player.getLocation().x() - 1, player.getLocation().y(), player.getLocation().z() + 1), player);
+                        generateNPC(new Location(player.getWorld(), player.getLocation().x() - 1, player.getLocation().y(), player.getLocation().z() - 1), player);
+                    }
+                }.runTaskLater(RiftEvent2.getInstance(), 30);
+            } catch (UnsupportedOperationException e) {
+                // Log a warning message
+                Bukkit.getLogger().warning("[RiftEvent] Failed to schedule NPC generation"  + e.getMessage());
+            }
+        });
     }
 }

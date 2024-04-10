@@ -54,29 +54,24 @@ public class InstabilityHandler {
                         }
                         if(currentInstabilityPercent == 50){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 50%");
-                            RandomMajorEvent();
+                            LoopedRandomMinorEvent();
+                            RandomMinorEvent();
                         }
                         if(currentInstabilityPercent == 60){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 60%");
-                            RandomMajorEvent();
+                            LoopedRandomMinorEvent();
                         }
                         if(currentInstabilityPercent == 70){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 70%");
-                            RandomMajorEvent();
+                            LoopedRandomMinorEvent();
                         }
                         if(currentInstabilityPercent == 80){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 80%");
-                            LoopedRandomMinorEvent();
-                            RandomMajorEvent();
+                            LoopedRandomMajorEvent();
                         }
                         if(currentInstabilityPercent == 90){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 90%");
                             LoopedRandomMinorEvent();
-                            LoopedRandomMajorEvent();
-                        }
-                        if(currentInstabilityPercent == 95){
-                            BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 90%");
-                            LoopedRandomMajorEvent();
                         }
                         instabilityTicker();
 

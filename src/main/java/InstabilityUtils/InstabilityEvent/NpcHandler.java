@@ -1,6 +1,7 @@
 package InstabilityUtils.InstabilityEvent;
 
 import GenericUtils.RandomUtils;
+import GenericUtils.RegionUtils;
 import RiftEvent2.RiftEvent2;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -8,6 +9,7 @@ import net.citizensnpcs.trait.LookClose;
 import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -71,7 +73,8 @@ public class NpcHandler {
         NpcIds.add(npc.getId());
 
         //move npc
-        scheduleNpcMoveToPlayer(npc, player);
+        npc.getNavigator().setTarget(player, false);
+        //scheduleNpcMoveToPlayer(npc, player);
     }
     public void scheduleNpcMoveToPlayer(NPC npc, Player player){
         try {
@@ -91,10 +94,10 @@ public class NpcHandler {
                         scheduleNpcMoveToPlayer(npc, player);
                         return;
                     }
-                    npc.getNavigator().setTarget(player.getLocation());
+                    npc.getNavigator().setTarget(player, false);
                     scheduleNpcMoveToPlayer(npc, player);
                 }
-            }.runTaskLater(RiftEvent2.getInstance(), 200 + RandomUtils.Randomint(60, 0));
+            }.runTaskLater(RiftEvent2.getInstance(), 200);
             MoveTasks.add(task.getTaskId());
         } catch (UnsupportedOperationException e) {
             // Log a warning message
@@ -117,14 +120,33 @@ public class NpcHandler {
     public void PlaceNpcsAroundPlayer() {
         Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
             player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 60, 1, false, false));
+
             try {
                 BukkitTask task = new BukkitRunnable() {
                     @Override
                     public void run() {
-                        player.playSound(player, Sound.AMBIENT_WARPED_FOREST_MOOD, 1, 1);
-                        generateNPC(new Location(player.getWorld(), player.getLocation().x() + 1, player.getLocation().y(), player.getLocation().z()), player);
-                        generateNPC(new Location(player.getWorld(), player.getLocation().x() - 1, player.getLocation().y(), player.getLocation().z() + 1), player);
-                        generateNPC(new Location(player.getWorld(), player.getLocation().x() - 1, player.getLocation().y(), player.getLocation().z() - 1), player);
+                        player.playSound(player, Sound.ENTITY_WARDEN_HEARTBEAT, 100, 0);
+                        RegionUtils.ReplaceBlockInRegionWithBlackList((int) Math.round(player.getLocation().x() - 3),
+                                (int) Math.round(player.getLocation().y()),
+                                (int) Math.round(player.getLocation().z() - 3),
+                                (int) Math.round(player.getLocation().x() + 3),
+                                (int) Math.round(player.getLocation().y() + 3),
+                                (int) Math.round(player.getLocation().z() + 3), player.getWorld(), ChunkEvent.BlackListedBlocks, Material.AIR);
+                    }
+                }.runTaskLater(RiftEvent2.getInstance(), 25);
+            } catch (UnsupportedOperationException e) {
+                // Log a warning message
+                Bukkit.getLogger().warning("[RiftEvent] Failed to schedule NPC sound"  + e.getMessage());
+            }
+            try {
+                BukkitTask task = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        generateNPC(new Location(player.getWorld(), player.getLocation().x() + 3, player.getLocation().y(), player.getLocation().z()), player);
+                        generateNPC(new Location(player.getWorld(), player.getLocation().x() - 3, player.getLocation().y(), player.getLocation().z()), player);
+                        generateNPC(new Location(player.getWorld(), player.getLocation().x(), player.getLocation().y(), player.getLocation().z() + 3), player);
+                        generateNPC(new Location(player.getWorld(), player.getLocation().x(), player.getLocation().y(), player.getLocation().z() - 3), player);
+
                     }
                 }.runTaskLater(RiftEvent2.getInstance(), 30);
             } catch (UnsupportedOperationException e) {

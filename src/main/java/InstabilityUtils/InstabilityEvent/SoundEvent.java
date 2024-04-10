@@ -45,7 +45,7 @@ public class SoundEvent {
                 @Override
                 public void run() {
                     Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
-                        player.playSound(player, getRandomSound(sounds), 1, 1);
+                        player.playSound(player, getRandomSound(sounds), 100, RandomUtils.Randomint(2,0));
                     });
                     SoundLooper();
                 }

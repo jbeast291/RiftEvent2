@@ -1,6 +1,7 @@
 package InstabilityUtils.InstabilityEvent;
 
 import GenericUtils.RandomUtils;
+import GenericUtils.RegionUtils;
 import RiftEvent2.RiftEvent2;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -13,11 +14,11 @@ import java.util.List;
 import java.util.Random;
 
 public class ChunkEvent {
-    public final List<Material> ReplacementBlocks = new ArrayList<Material>(){{
+    public static final List<Material> ReplacementBlocks = new ArrayList<Material>(){{
         add(Material.MAGENTA_CONCRETE);
         add(Material.BLACK_CONCRETE);
     }};
-    public final List<Material> BlackListedBlocks = new ArrayList<Material>(){{
+    public static final List<Material> BlackListedBlocks = new ArrayList<Material>(){{
         add(Material.CHEST);
         add(Material.BARREL);
         add(Material.DISPENSER);
@@ -63,7 +64,7 @@ public class ChunkEvent {
                 @Override
                 public void run() {
                     Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
-                        ReplaceBlockInRegionWithBlackList((int) Math.round(player.getLocation().x() - 5),
+                        RegionUtils.ReplaceBlockInRegionWithBlackList((int) Math.round(player.getLocation().x() - 5),
                                 (int) Math.round(player.getLocation().y() - 5),
                                 (int) Math.round(player.getLocation().z() - 5),
                                 (int) Math.round(player.getLocation().x() + 5),
@@ -72,7 +73,7 @@ public class ChunkEvent {
                     });
                     ChunkLooper();
                 }
-            }.runTaskLater(RiftEvent2.getInstance(), 5);
+            }.runTaskLater(RiftEvent2.getInstance(), 1);
             ChunkLoopTasks.add(task.getTaskId());
         } catch (UnsupportedOperationException e) {
             // Log a warning message
@@ -81,33 +82,23 @@ public class ChunkEvent {
     }
     public List<Integer> ChunkLoopTasks = new ArrayList<Integer>();
 
+    public void replaceAllAroundPlayersOnce(){
+        int rand = RandomUtils.Randomint(10,0);
+        Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
+            RegionUtils.ReplaceBlockInRegionWithBlackList((int) Math.round(player.getLocation().x() - 15),
+                    (int) Math.round(player.getLocation().y() - 15),
+                    (int) Math.round(player.getLocation().z() - 15),
+                    (int) Math.round(player.getLocation().x() + 15),
+                    (int) Math.round(player.getLocation().y() + 15),
+                    (int) Math.round(player.getLocation().z() + 15), player.getWorld(), BlackListedBlocks, ReplacementBlocks);
+        });
+    }
+
     public void CancelAllTasks() {
         ChunkLoopTasks.forEach(taskId -> {
             Bukkit.getScheduler().cancelTask(taskId);
         });
         ChunkLoopTasks.clear();
-    }
-    public static void ReplaceBlockInRegionWithBlackList(int x, int y, int z, int x2, int y2, int z2, World world, List<Material> BlackListedBlocks, List<Material> ReplacementBLocks){
-        int minX = Math.min(x, x2);
-        int minY = Math.min(y, y2);
-        int minZ = Math.min(z, z2);
-        int maxX = Math.max(x, x2);
-        int maxY = Math.max(y, y2);
-        int maxZ = Math.max(z, z2);
-
-        for (int currentX = minX; currentX <= maxX; currentX++) {//x
-            for (int currentY = minY; currentY <= maxY; currentY++) {//y
-                for (int currentZ = minZ; currentZ <= maxZ; currentZ++) {//z
-                    if(RandomUtils.Randomint(10, 1) == 2){
-                        Location blockpos = new Location(world, currentX, currentY, currentZ);
-                        if (BlackListedBlocks.contains(blockpos.getBlock().getType()) || blockpos.getBlock().getType().equals(Material.AIR)) {
-                            continue;
-                        }
-                        blockpos.getBlock().setType(getRandomMaterial(ReplacementBLocks));
-                    }
-                }
-            }
-        }
     }
     public static Material getRandomMaterial(List<Material> Materials){
 

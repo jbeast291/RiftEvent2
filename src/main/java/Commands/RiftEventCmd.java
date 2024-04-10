@@ -1,5 +1,6 @@
 package Commands;
 
+import GenericUtils.RandomUtils;
 import InstabilityUtils.InstabilityEvent.AnimalEvent;
 import InstabilityUtils.InstabilityEvent.NpcHandler;
 import RiftEvent2.RiftEvent2;
@@ -35,6 +36,11 @@ public class RiftEventCmd implements CommandExecutor {
             }
             if (args[0].equalsIgnoreCase("DEBUG2")) {
                 RiftEvent2.getChunkEventInstance().ChunkLooper();
+
+            }
+            if (args[0].equalsIgnoreCase("TESTMSG")) {
+                Player player = (Player) sender;
+                player.sendMessage("§6pri§kv§r§6ate§6 §dvoid §r§9Gr§ke§r§9et§r§9Inte§kr§r§9loper§7w() { §f§kUSER§r§f.mes§ks§r§fage.sen§kd§r§fDec§ko§r§fded(You Have Been Deemed To Be In Violation Of Clause: " + RandomUtils.Randomint(420, 69) +" In The Interdimensional Harvesting Of Resources Act) §6ret§ku§r§6rn§f; §7}");
 
             }
 

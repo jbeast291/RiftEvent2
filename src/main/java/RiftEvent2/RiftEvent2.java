@@ -4,6 +4,7 @@ import Commands.RiftEventCmd;
 import InstabilityUtils.InstabilityEvent.*;
 import InstabilityUtils.InstabilityHandler;
 import WorldUtils.WorldUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.generator.structure.Structure;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,8 +37,6 @@ public final class RiftEvent2 extends JavaPlugin {
     //How long the rift should stay open, once loaded, in minutes
     public static int TimeRiftOpenMin = 2;
 
-    public Location RiftCenter;
-
     //Current Rift info
     //-----------
 
@@ -46,6 +45,7 @@ public final class RiftEvent2 extends JavaPlugin {
         // 1: Active
     public int gameState;
     public String structureName;
+    public Location RiftCenter;
     public boolean isNether;
     public boolean isEnd;
     public boolean isOcean;
@@ -56,6 +56,7 @@ public final class RiftEvent2 extends JavaPlugin {
     @Override
     public void onEnable() {
 
+        Bukkit.getLogger().info("§6pri§kv§r§6ate§6 §dvoid §r§9Gr§ke§r§9et§r§9Inte§kr§r§9loper§f() { §f§kUSER§r§f.mes§ks§r§fage.sen§kd§r§fDec§ko§r§fded(You Have Been Deemed To Be In Violation Of Cause 30 In The Interdimensional Harvesting Of Resources Act) §6ret§ku§r§6rn§f; §7}");
         saveDefaultConfig();
 
         //Instances
@@ -76,6 +77,7 @@ public final class RiftEvent2 extends JavaPlugin {
 
         //commands
         getCommand("riftevent").setExecutor(new RiftEventCmd());
+
     }
 
     @Override

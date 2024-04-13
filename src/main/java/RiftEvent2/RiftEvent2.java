@@ -23,6 +23,8 @@ public final class RiftEvent2 extends JavaPlugin {
     private static BlockEvent BlockEventInstance;
     private static ChunkEvent ChunkEventInstance;
 
+    private static ChatEvent ChatEventInstance;
+
     public String WorldName = "RiftEvent";
 
     public final List<Structure> Structures = new ArrayList<Structure>(){{
@@ -68,6 +70,7 @@ public final class RiftEvent2 extends JavaPlugin {
         AnimalEventInstance = new AnimalEvent();
         BlockEventInstance = new BlockEvent(this);//implements listener
         ChunkEventInstance = new ChunkEvent();
+        ChatEventInstance = new ChatEvent();
 
         //
         InstabilityInstance.OpenRift();
@@ -112,5 +115,8 @@ public final class RiftEvent2 extends JavaPlugin {
     }
     public static ChunkEvent getChunkEventInstance() {
         return ChunkEventInstance;
+    }
+    public static ChatEvent getChatEventInstance() {
+        return ChatEventInstance;
     }
 }

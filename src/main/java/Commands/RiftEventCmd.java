@@ -27,6 +27,7 @@ public class RiftEventCmd implements CommandExecutor {
             if (args[0].equalsIgnoreCase("ResetRift")) {
                 Player player = (Player) sender;
                 RiftEvent2.getInstabilityUtilInstance().SafelyCloseRift(true);
+                sender.sendMessage("The Rift has been reset.");
             }
             if (args[0].equalsIgnoreCase("npc")) {
                 RiftEvent2.getNpcHandlerInstance().PlaceNpcsAroundPlayer();
@@ -35,7 +36,7 @@ public class RiftEventCmd implements CommandExecutor {
                 RiftEvent2.getChunkEventInstance().CancelAllTasks();
             }
             if (args[0].equalsIgnoreCase("DEBUG2")) {
-                RiftEvent2.getChunkEventInstance().ChunkLooper();
+                RiftEvent2.getChatEventInstance().ChatSpammer();
 
             }
             if (args[0].equalsIgnoreCase("TESTMSG")) {

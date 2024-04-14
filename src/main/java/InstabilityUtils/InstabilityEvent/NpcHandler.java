@@ -7,13 +7,14 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.trait.LookClose;
 import net.citizensnpcs.trait.SkinTrait;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -21,10 +22,9 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class NpcHandler {
-    public void generateNPC(Location location, Player player) {
+    public void generateNPC(Location location, Player player, boolean isHostile) {
 
         //Saftey check
         if(player.getWorld() != Bukkit.getWorld(RiftEvent2.getInstance().WorldName))
@@ -73,29 +73,28 @@ public class NpcHandler {
         NpcIds.add(npc.getId());
 
         //move npc
-        npc.getNavigator().setTarget(player, false);
-        //scheduleNpcMoveToPlayer(npc, player);
+        scheduleNpcTargetToPlayer(npc, player, isHostile);
     }
-    public void scheduleNpcMoveToPlayer(NPC npc, Player player){
+    public void scheduleNpcTargetToPlayer(NPC npc, Player player, boolean isHostile){
         try {
             BukkitTask task = new BukkitRunnable() {
                 @Override
                 public void run() {
                     if(!player.isOnline()) {
-                        scheduleNpcMoveToPlayer(npc, player);
+                        scheduleNpcTargetToPlayer(npc, player, isHostile);
                         return;
                     }
                     if(player.getWorld() != Bukkit.getWorld(RiftEvent2.getInstance().WorldName)) {
-                        scheduleNpcMoveToPlayer(npc, player);
+                        scheduleNpcTargetToPlayer(npc, player, isHostile);
                         return;
                     }
 
                     if(!npc.isSpawned() || !npc.getNavigator().canNavigateTo(player.getLocation())) {
-                        scheduleNpcMoveToPlayer(npc, player);
+                        scheduleNpcTargetToPlayer(npc, player, isHostile);
                         return;
                     }
-                    npc.getNavigator().setTarget(player, false);
-                    scheduleNpcMoveToPlayer(npc, player);
+                    npc.getNavigator().setTarget(player, isHostile);
+                    scheduleNpcTargetToPlayer(npc, player, isHostile);
                 }
             }.runTaskLater(RiftEvent2.getInstance(), 200);
             MoveTasks.add(task.getTaskId());
@@ -118,37 +117,81 @@ public class NpcHandler {
         NpcIds.clear();
     }
     public void PlaceNpcsAroundPlayer() {
-        Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 60, 1, false, false));
 
+
+        boolean isHostileToPlayer = false;
+        if (RandomUtils.Randomint(1,0) == 0){
+            isHostileToPlayer = true;
+        }
+
+        //Don't really understand java but need this her for some reason :/
+        boolean finalIsHostileToPlayer = isHostileToPlayer;
+
+        Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
+
+            //Darkness
+            player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 120, 1, false, false));
+
+            //remove blocks around player and
             try {
                 BukkitTask task = new BukkitRunnable() {
                     @Override
                     public void run() {
                         player.playSound(player, Sound.ENTITY_WARDEN_HEARTBEAT, 100, 0);
+
+
                         RegionUtils.ReplaceBlockInRegionWithBlackList((int) Math.round(player.getLocation().x() - 3),
                                 (int) Math.round(player.getLocation().y()),
                                 (int) Math.round(player.getLocation().z() - 3),
                                 (int) Math.round(player.getLocation().x() + 3),
                                 (int) Math.round(player.getLocation().y() + 3),
                                 (int) Math.round(player.getLocation().z() + 3), player.getWorld(), ChunkEvent.BlackListedBlocks, Material.AIR);
+
+
+                        player.sendMessage("§0[§5Null Enti§kt§r§5y§0]§f You Have Been Deemed To Be In Violation Of Clause:" + RandomUtils.Randomint(420, 69) + " From The Interdimensional Harvesting Of Resources Act");
                     }
-                }.runTaskLater(RiftEvent2.getInstance(), 25);
+                }.runTaskLater(RiftEvent2.getInstance(), 30);
             } catch (UnsupportedOperationException e) {
                 // Log a warning message
                 Bukkit.getLogger().warning("[RiftEvent] Failed to schedule NPC sound"  + e.getMessage());
             }
+
+            //spawn nps
             try {
                 BukkitTask task = new BukkitRunnable() {
                     @Override
                     public void run() {
-                        generateNPC(new Location(player.getWorld(), player.getLocation().x() + 3, player.getLocation().y(), player.getLocation().z()), player);
-                        generateNPC(new Location(player.getWorld(), player.getLocation().x() - 3, player.getLocation().y(), player.getLocation().z()), player);
-                        generateNPC(new Location(player.getWorld(), player.getLocation().x(), player.getLocation().y(), player.getLocation().z() + 3), player);
-                        generateNPC(new Location(player.getWorld(), player.getLocation().x(), player.getLocation().y(), player.getLocation().z() - 3), player);
+
+                        generateNPC(new Location(player.getWorld(), player.getLocation().x() + 3, player.getLocation().y(), player.getLocation().z()), player, finalIsHostileToPlayer);
+                        generateNPC(new Location(player.getWorld(), player.getLocation().x() - 3, player.getLocation().y(), player.getLocation().z()), player, finalIsHostileToPlayer);
+                        generateNPC(new Location(player.getWorld(), player.getLocation().x(), player.getLocation().y(), player.getLocation().z() + 3), player, finalIsHostileToPlayer);
+                        generateNPC(new Location(player.getWorld(), player.getLocation().x(), player.getLocation().y(), player.getLocation().z() - 3), player, finalIsHostileToPlayer);
+                        player.sendMessage("§0[§5Null Enti§kt§r§5y§0]§f DETERMINING THREAT LEVEL... §cno need to run ;)");
 
                     }
-                }.runTaskLater(RiftEvent2.getInstance(), 30);
+                }.runTaskLater(RiftEvent2.getInstance(), 60);
+            } catch (UnsupportedOperationException e) {
+                // Log a warning message
+                Bukkit.getLogger().warning("[RiftEvent] Failed to schedule NPC generation"  + e.getMessage());
+            }
+
+            try {
+                BukkitTask task = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if (finalIsHostileToPlayer) {
+                            player.sendMessage("§0[§5Null Enti§kt§r§5y§0] §0{§aSuccess§0} §fTHREAT LEVEL: §4Severe");
+                            player.sendMessage("§0[§5Null Enti§kt§r§5y§0]§f Hostile FORCE: §aAuthorized");
+                            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§4 ALERT: §fYou are being hunted"));
+                        }
+                        if (!finalIsHostileToPlayer) {
+                            player.sendMessage("§0[§5Null Enti§kt§r§5y§0] §0{§4Failure§0} §fTHREAT LEVEL: §5Unknown");
+                            player.sendMessage("§0[§5Null Enti§kt§r§5y§0]§f Hostile FORCE: §4Denied");
+                            player.sendMessage("§0[§5Null Enti§kt§r§5y§0]§f Continuing To Monitor §4Trespasser");
+                            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§4 ALERT: §fYou are being §ofollowed"));
+                        }
+                    }
+                }.runTaskLater(RiftEvent2.getInstance(), 140);
             } catch (UnsupportedOperationException e) {
                 // Log a warning message
                 Bukkit.getLogger().warning("[RiftEvent] Failed to schedule NPC generation"  + e.getMessage());

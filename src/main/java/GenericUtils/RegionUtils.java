@@ -2,6 +2,7 @@ package GenericUtils;
 
 import InstabilityUtils.InstabilityEvent.ChunkEvent;
 import RiftEvent2.RiftEvent2;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -80,17 +81,13 @@ public class RegionUtils {
         for (int currentX = minX; currentX <= maxX; currentX++) {//x
             for (int currentY = minY; currentY <= maxY; currentY++) {//y
                 for (int currentZ = minZ; currentZ <= maxZ; currentZ++) {//z
-                    if(RandomUtils.Randomint(50, 1) == 2){
-                        Location blockpos = new Location(world, currentX, currentY, currentZ);
-                        if (BlackListedBlocks.contains(blockpos.getBlock().getType()) ||
-                                blockpos.getBlock().getType().equals(Material.AIR) ||
-                                blockpos.getBlock().getType().equals(Material.WATER)) {
-                            continue;
-                        }
-                        blockpos.getBlock().setType(ReplacementBLock);
+                    Location blockpos = new Location(world, currentX, currentY, currentZ);
+                    if (BlackListedBlocks.contains(blockpos.getBlock().getType())) {
+                        continue;
+                    }
+                    blockpos.getBlock().setType(ReplacementBLock);
                     }
                 }
             }
         }
     }
-}

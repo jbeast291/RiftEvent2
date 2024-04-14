@@ -57,6 +57,18 @@ public class ChunkEvent {
         add(Material.SMOKER);
         add(Material.SOUL_CAMPFIRE);
         add(Material.TRAPPED_CHEST);
+        add(Material.BUBBLE_COLUMN);
+        add(Material.KELP);
+        add(Material.KELP_PLANT);
+        add(Material.SEA_PICKLE);
+        add(Material.SEAGRASS);
+        add(Material.VINE);
+        add(Material.CAVE_VINES);
+        add(Material.WEEPING_VINES);
+        add(Material.TWISTING_VINES);
+        add(Material.CAVE_VINES_PLANT);
+        add(Material.WEEPING_VINES_PLANT);
+        add(Material.TWISTING_VINES_PLANT);
     }};
     public void ChunkLooper(){
         try {

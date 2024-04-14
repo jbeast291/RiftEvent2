@@ -24,9 +24,7 @@ public class ChatEvent {
     public void ChatSpammer() {
         Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
             int randomOffSet = RandomUtils.Randomint(3, 0);
-            for (int i = 0; i < 2 + randomOffSet; i++) {
                 player.sendMessage(RandomMessage(ChatMessages));
-            }
     });
 }
     public String RandomMessage(List<String> String){

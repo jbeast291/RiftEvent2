@@ -70,12 +70,6 @@ public class SoundEvent {
         });
     }
     public static Sound getRandomSound(List<Sound> sounds){
-
-        int max = sounds.size() - 1;
-        int min = 0;
-        int range = max - min + 1;
-
-        int rand = (int)(Math.random() * range) + min;
-        return sounds.get(rand);
+        return sounds.get(RandomUtils.Randomint(sounds.size() - 1, 0));
     }
 }

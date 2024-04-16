@@ -97,12 +97,6 @@ public class AnimalEvent {
 
 
     public EntityType RandomEntity(List<EntityType> EntityType){
-
-        int max = EntityType.size() - 1;
-        int min = 0;
-        int range = max - min + 1;
-
-        int rand = (int)(Math.random() * range) + min;
-        return EntityType.get(rand);
+        return EntityType.get(RandomUtils.Randomint(EntityType.size() - 1, 0));
     }
 }

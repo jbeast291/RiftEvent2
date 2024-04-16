@@ -4,14 +4,11 @@ import GenericUtils.RandomUtils;
 import GenericUtils.RegionUtils;
 import RiftEvent2.RiftEvent2;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class ChunkEvent {
     public static final List<Material> ReplacementBlocks = new ArrayList<Material>(){{
@@ -76,7 +73,7 @@ public class ChunkEvent {
                 @Override
                 public void run() {
                     Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
-                        RegionUtils.ReplaceBlockInRegionWithBlackList((int) Math.round(player.getLocation().x() - 5),
+                        RegionUtils.RandomReplaceBlockInRegionWithBlackList((int) Math.round(player.getLocation().x() - 5),
                                 (int) Math.round(player.getLocation().y() - 5),
                                 (int) Math.round(player.getLocation().z() - 5),
                                 (int) Math.round(player.getLocation().x() + 5),
@@ -95,9 +92,8 @@ public class ChunkEvent {
     public List<Integer> ChunkLoopTasks = new ArrayList<Integer>();
 
     public void replaceAllAroundPlayersOnce(){
-        int rand = RandomUtils.Randomint(10,0);
         Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
-            RegionUtils.ReplaceBlockInRegionWithBlackList((int) Math.round(player.getLocation().x() - 15),
+            RegionUtils.RandomReplaceBlockInRegionWithBlackList((int) Math.round(player.getLocation().x() - 15),
                     (int) Math.round(player.getLocation().y() - 15),
                     (int) Math.round(player.getLocation().z() - 15),
                     (int) Math.round(player.getLocation().x() + 15),
@@ -113,12 +109,6 @@ public class ChunkEvent {
         ChunkLoopTasks.clear();
     }
     public static Material getRandomMaterial(List<Material> Materials){
-
-        int max = Materials.size() - 1;
-        int min = 0;
-        int range = max - min + 1;
-
-        int rand = (int)(Math.random() * range) + min;
-        return Materials.get(rand);
+        return Materials.get(RandomUtils.Randomint(Materials.size() - 1, 0));
     }
 }

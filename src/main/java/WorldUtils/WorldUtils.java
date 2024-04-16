@@ -1,5 +1,6 @@
 package WorldUtils;
 
+import GenericUtils.RandomUtils;
 import RiftEvent2.RiftEvent2;
 import org.bukkit.*;
 import org.bukkit.generator.structure.Structure;
@@ -139,22 +140,12 @@ public class WorldUtils {
     }
 
     public static Structure getRandomStructure(List<Structure> Structures){
-
-        int max = Structures.size() - 1;
-        int min = 0;
-        int range = max - min + 1;
-
-        int rand = (int)(Math.random() * range) + min;
+        int rand = RandomUtils.Randomint(Structures.size() - 1,0);
         return Structures.get(rand);
     }
 
     public WorldType getRandomWorldType(){
-
-        int max = 5;
-        int min = 0;
-        int range = max - min + 1;
-
-        int rand = (int)(Math.random() * range) + min;
+        int rand = RandomUtils.Randomint(5,0);
         if(rand <= 3)
             return WorldType.NORMAL;
         else

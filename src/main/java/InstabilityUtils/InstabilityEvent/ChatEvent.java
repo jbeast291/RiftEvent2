@@ -21,19 +21,13 @@ public class ChatEvent {
         add("");
          */
     }};
-    public void ChatSpammer() {
+    public void ChatSpam() {
         Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
             int randomOffSet = RandomUtils.Randomint(3, 0);
                 player.sendMessage(RandomMessage(ChatMessages));
     });
 }
     public String RandomMessage(List<String> String){
-
-        int max = String.size() - 1;
-        int min = 0;
-        int range = max - min + 1;
-
-        int rand = (int)(Math.random() * range) + min;
-        return String.get(rand);
+        return String.get(RandomUtils.Randomint(String.size() - 1, 0));
     }
 }

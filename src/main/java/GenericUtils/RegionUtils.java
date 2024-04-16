@@ -1,8 +1,6 @@
 package GenericUtils;
 
 import InstabilityUtils.InstabilityEvent.ChunkEvent;
-import RiftEvent2.RiftEvent2;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -46,7 +44,7 @@ public class RegionUtils {
             }
         }
     }
-    public static void ReplaceBlockInRegionWithBlackList(int x, int y, int z, int x2, int y2, int z2, World world, List<Material> BlackListedBlocks, List<Material> ReplacementBLocks){
+    public static void RandomReplaceBlockInRegionWithBlackList(int x, int y, int z, int x2, int y2, int z2, World world, List<Material> BlackListedBlocks, List<Material> ReplacementBLocks){
         int minX = Math.min(x, x2);
         int minY = Math.min(y, y2);
         int minZ = Math.min(z, z2);

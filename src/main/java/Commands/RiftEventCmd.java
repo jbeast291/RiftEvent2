@@ -33,10 +33,16 @@ public class RiftEventCmd implements CommandExecutor {
                 RiftEvent2.getNpcHandlerInstance().PlaceNpcsAroundPlayer();
             }
             if (args[0].equalsIgnoreCase("DEBUG")) {
-                RiftEvent2.getChunkEventInstance().CancelAllTasks();
+                Player player = (Player) sender;
+                RiftEvent2.getParticleEventInstance().SpawnParticlesInRegion((int) Math.round(player.getLocation().x() - 15),
+                        (int) Math.round(player.getLocation().y() - 15),
+                        (int) Math.round(player.getLocation().z() - 15),
+                        (int) Math.round(player.getLocation().x() + 15),
+                        (int) Math.round(player.getLocation().y() + 15),
+                        (int) Math.round(player.getLocation().z() + 15), player.getWorld(), 70);
             }
             if (args[0].equalsIgnoreCase("DEBUG2")) {
-                RiftEvent2.getChatEventInstance().ChatSpammer();
+                RiftEvent2.getChatEventInstance().ChatSpam();
 
             }
 

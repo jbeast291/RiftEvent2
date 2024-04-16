@@ -128,13 +128,16 @@ public class InstabilityHandler {
 
     //single effect, cave noise, chat
     public void RandomMinorEvent() {
-         int rand = RandomUtils.Randomint(2, 1);
+         int rand = RandomUtils.Randomint(3, 1);
          if (rand == 1) {
              RiftEvent2.getSoundEventInstance().PlayCaveSoundOnce();
          }
-        if (rand == 2) {
+         if (rand == 2) {
             RiftEvent2.getAnimalEventInstance().AnimalSpawner();
-        }
+         }
+         if (rand == 3) {
+             RiftEvent2.getEffectEventInstance().GiveRandomEffectToPlayers(500, 2);
+         }
 
     }
     //Npc spawn, inventory fill, particle event
@@ -142,6 +145,9 @@ public class InstabilityHandler {
         int rand = RandomUtils.Randomint(1, 1);
         if (rand == 1) {
             RiftEvent2.getNpcHandlerInstance().PlaceNpcsAroundPlayer();
+        }
+        if (rand == 2) {
+            RiftEvent2.getChunkEventInstance().replaceAllAroundPlayersOnce();
         }
     }
 
@@ -241,6 +247,7 @@ public class InstabilityHandler {
         RiftEvent2.getChunkEventInstance().CancelAllTasks();
         RiftEvent2.getBlockEventInstance().ResetBlockEvent();
         RiftEvent2.getNpcHandlerInstance().CancelAllTasksAndRemoveNpcs();
+        RiftEvent2.getEffectEventInstance().CancelAllTasks();
 
         //reset World variables
         RiftEvent2.getInstance().isNether = false;

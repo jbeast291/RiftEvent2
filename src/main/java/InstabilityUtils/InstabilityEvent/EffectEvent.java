@@ -23,6 +23,16 @@ public class EffectEvent {
         add(PotionEffectType.DOLPHINS_GRACE);
         add(PotionEffectType.HERO_OF_THE_VILLAGE);
         add(PotionEffectType.SLOW_FALLING);
+        add(PotionEffectType.ABSORPTION);
+        add(PotionEffectType.BAD_OMEN);
+        add(PotionEffectType.FAST_DIGGING);
+        add(PotionEffectType.HUNGER);
+        add(PotionEffectType.JUMP);
+        add(PotionEffectType.LEVITATION);
+        add(PotionEffectType.DAMAGE_RESISTANCE);
+        add(PotionEffectType.SLOW);
+        add(PotionEffectType.WATER_BREATHING);
+        add(PotionEffectType.WEAKNESS);
     }};
     public static void GiveRandomEffectToPlayers(int duration, int amplifier) {
         List<Player> PlayerList = Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers();

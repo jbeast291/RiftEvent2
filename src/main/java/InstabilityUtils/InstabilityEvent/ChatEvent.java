@@ -82,7 +82,37 @@ public class ChatEvent {
         add("§8https://jd.papermc.io/paper/1.20/org/bukkit/WorldCreator.html#environment()");
         add("§5Chess §d§kjames§r§d scares me ngl");
         add("§dhttps://www.bcp.org/");
-        add("Where did you learn what it means to §d§kreciprocate§r§d?");
+        add("§dWhere did you learn what it means to §d§kreciprocate§r§d?");
+        add("§dDysifier is §d§kballs");
+        add("§5STOP NO");
+        add("§5I did not give §5§kconsent§r§5 wegs, please do not §5§ktouch§r§5 me");
+        add("§5C418 is §5§kgyatted§r§5 up evan");
+        add("§dwhat the Si§d§kg§r§dma!?!??!?!");
+        add("§5!VIRGIN DETECTED! Self-destruct Sequence §5§kActivated§r§5.");
+        add("§5HAHA I GOT UR IP: §d192.168.4.7");
+        add("§dHAHA I GOT UR IP: §5127.4.5.1");
+        add("§5HAHA I GOT UR IP: §d178.16.143.29");
+        add("§5ENTITY: §dBlake. §5VIRGINITY: §d100% Intact. §5ACTION: §dEliminate");
+        add("§5ENTITY: §dwegtftftfge. §5VIRGINITY: §d100% Intact. §5ACTION: §dEliminate");
+        add("§5§kSTICK§r§5 IT INSIDE ME AUGHHHHHHHHHH §5§k*moans*§r§5");
+        add("§djbeast san... NOTICE ME §5§kSenpaiiii§r§5 ");
+        add("§d8-§d§k-§r§d--D");
+        add("§dAdvancement Unlocked: §5[Locked in the Basement!]");
+        add("§dAdvancement Unlocked: §5[Explore the Island Basement!]");
+        add("§dAdvancement Unlocked: §5[Ep§5§ks§r§5tein!]");
+        add("§5I want to §d§krizz§r§5 up duke dennis and kai cenat while §d§kmogging§r§5 on livvy dunnes §d§kgyatt§r§5");
+        add("§dperfect day to get §d§ksucked§r§5");
+        add("§dgo bells! §d§kzest zest§r§5");
+        add("Wegs/Jbeast is the sobrato §d§krizz§r§5");
+        add("§5why am i playing with time as its §5§kticking§r§d away. its §5§kticking§r§d away- away- im asking why do we run for our §5§klives§r§d not a §5§ksecond§r§d to waste, its §5§kticking§r§d away- away- away-");
+        add("§di would lowkey §d§ksmash§r§5 bea from brawl stars");
+        add("§dbut not as much as i want to §d§ksmash§r§5 jbeast from bellarmine");
+        add("§5mbreast!!§d§k!!!§r§5");
+        add("§5last to leave the server gets to keep their §d§kvirginity§r§5!! wait guys why are you all pulling all nighters...");
+        add("§5miles morales §8§k(the black one)§r§5 is the biggest rizzler of the §d§k21st§r§5 century");
+        add("§5Droopy likes Ric§d§koc§r§5het");
+        add("§dStream Facts by §5§kTom§r§d Macdonald featuring §5§kBen§r§d Shapiro on iTunes and §5§kSpotify§r§d :D");
+        add("§dYou should've §5§kPicked§r§d Mercy. You should've picked any kind of §5§kSupport§r§d.");
     }};
     public void ChatSpam() {
         Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {

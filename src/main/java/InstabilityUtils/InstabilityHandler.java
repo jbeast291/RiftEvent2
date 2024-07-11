@@ -68,6 +68,7 @@ public class InstabilityHandler {
                         if(currentInstabilityPercent == 80){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 80%");
                             LoopedRandomMajorEvent();
+                            RandomMajorEvent();
                         }
                         if(currentInstabilityPercent == 90){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 90%");

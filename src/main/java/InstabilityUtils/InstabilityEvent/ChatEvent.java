@@ -7,6 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatEvent {
+    public final List<String> ChatSource = new ArrayList<String>(){{
+        add("§0[§5§kU§r§5nknown§0] §r");
+        add("§0[§5U§kn§r§5known§0] §r");
+        add("§0[§5Un§kK§r§5nown§0] §r");
+        add("§0[§5Unk§kn§r§5own§0] §r");
+        add("§0[§5Unkn§ko§r§5wn§0] §r");
+        add("§0[§5Unkno§kw§r§5n§0] §r");
+        add("§0[§5Unknow§kn§r§0] §r");
+    }};
+
+
     public final List<String> ChatMessages = new ArrayList<String>(){{
         add("§6§kRoses are red, Diamonds are blue, Creepers are scary, There's one behind you!");
         add("§dhttp://discord.com/invite/S2F4TJhVcV");
@@ -116,8 +127,7 @@ public class ChatEvent {
     }};
     public void ChatSpam() {
         Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
-            int randomOffSet = RandomUtils.Randomint(3, 0);
-                player.sendMessage(RandomMessage(ChatMessages));
+            player.sendMessage( RandomMessage(ChatSource) + RandomMessage(ChatMessages));
     });
 }
     public String RandomMessage(List<String> String){

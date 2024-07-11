@@ -19,7 +19,7 @@ public class AnimalEvent {
         add(EntityType.PIG);
         add(EntityType.SHEEP);
         add(EntityType.MULE);
-        add(EntityType.MUSHROOM_COW);
+        add(EntityType.MOOSHROOM);
         add(EntityType.OCELOT);
         add(EntityType.CAT);
         add(EntityType.CAMEL);

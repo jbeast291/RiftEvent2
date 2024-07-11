@@ -25,12 +25,12 @@ public class EffectEvent {
         add(PotionEffectType.SLOW_FALLING);
         add(PotionEffectType.ABSORPTION);
         add(PotionEffectType.BAD_OMEN);
-        add(PotionEffectType.FAST_DIGGING);
+        add(PotionEffectType.HASTE);
         add(PotionEffectType.HUNGER);
-        add(PotionEffectType.JUMP);
+        add(PotionEffectType.JUMP_BOOST);
         add(PotionEffectType.LEVITATION);
-        add(PotionEffectType.DAMAGE_RESISTANCE);
-        add(PotionEffectType.SLOW);
+        add(PotionEffectType.RESISTANCE);
+        add(PotionEffectType.SLOWNESS);
         add(PotionEffectType.WATER_BREATHING);
         add(PotionEffectType.WEAKNESS);
     }};

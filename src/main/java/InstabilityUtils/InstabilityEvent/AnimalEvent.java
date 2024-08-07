@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AnimalEvent {
-    public final List<EntityType> OverworldList = new ArrayList<EntityType>(){{
+    public static final List<EntityType> OverworldList = new ArrayList<EntityType>(){{
         add(EntityType.LLAMA);
         add(EntityType.COW);
         add(EntityType.CHICKEN);
@@ -24,13 +24,13 @@ public class AnimalEvent {
         add(EntityType.CAT);
         add(EntityType.CAMEL);
     }};
-    public final List<EntityType> NetherList = new ArrayList<EntityType>(){{
+    public static final List<EntityType> NetherList = new ArrayList<EntityType>(){{
         add(EntityType.STRIDER);
         add(EntityType.ZOMBIFIED_PIGLIN);
         add(EntityType.ZOMBIFIED_PIGLIN);
         add(EntityType.ENDERMAN);
     }};
-    public final List<EntityType> EndList = new ArrayList<EntityType>(){{
+    public static final List<EntityType> EndList = new ArrayList<EntityType>(){{
         add(EntityType.ENDERMAN);
         add(EntityType.ENDERMAN);
         add(EntityType.ENDERMAN);
@@ -38,7 +38,7 @@ public class AnimalEvent {
         add(EntityType.ENDERMAN);
         add(EntityType.ENDERMITE);
     }};
-    public final List<EntityType> OceanList = new ArrayList<EntityType>(){{
+    public static final List<EntityType> OceanList = new ArrayList<EntityType>(){{
         add(EntityType.SALMON);
         add(EntityType.COD);
         add(EntityType.TROPICAL_FISH);
@@ -48,7 +48,7 @@ public class AnimalEvent {
     }};
 
 
-    public void AnimalSpawner() {
+    public static void AnimalSpawner() {
         List<EntityType> SelectedList = new ArrayList<EntityType>();
         if(RiftEvent2.getInstance().isNether) {
             SelectedList = NetherList;
@@ -70,7 +70,7 @@ public class AnimalEvent {
             }
         });
     }
-    public void AnimalSpawnerLoop() {
+    public static void AnimalSpawnerLoop() {
         try {
             BukkitTask task = new BukkitRunnable() {
                 @Override
@@ -78,7 +78,7 @@ public class AnimalEvent {
                     AnimalSpawner();
                     AnimalSpawnerLoop();
                 }
-            }.runTaskLater(RiftEvent2.getInstance(), 200 + RandomUtils.Randomint(150, 0));
+            }.runTaskLater(RiftEvent2.getInstance(), 400 + RandomUtils.Randomint(150, 0));
             AnimalLooperTasks.add(task.getTaskId());
         } catch (UnsupportedOperationException e) {
             // Log a warning message
@@ -86,9 +86,9 @@ public class AnimalEvent {
         }
     }
 
-    public List<Integer> AnimalLooperTasks = new ArrayList<Integer>();
+    public static List<Integer> AnimalLooperTasks = new ArrayList<Integer>();
 
-    public void CancelAllTasks() {
+    public static void CancelAllTasks() {
         AnimalLooperTasks.forEach(taskId -> {
             Bukkit.getScheduler().cancelTask(taskId);
         });
@@ -96,7 +96,7 @@ public class AnimalEvent {
     }
 
 
-    public EntityType RandomEntity(List<EntityType> EntityType){
+    public static EntityType RandomEntity(List<EntityType> EntityType){
         return EntityType.get(RandomUtils.Randomint(EntityType.size() - 1, 0));
     }
 }

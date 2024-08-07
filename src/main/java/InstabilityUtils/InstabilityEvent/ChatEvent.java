@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatEvent {
-    public final List<String> ChatSource = new ArrayList<String>(){{
+    public static final List<String> ChatSource = new ArrayList<String>(){{
         add("§0[§5§kU§r§5nknown§0] §r");
         add("§0[§5U§kn§r§5known§0] §r");
         add("§0[§5Un§kK§r§5nown§0] §r");
@@ -18,12 +18,10 @@ public class ChatEvent {
     }};
 
 
-    public final List<String> ChatMessages = new ArrayList<String>(){{
+    public static final List<String> ChatMessages = new ArrayList<String>(){{
         add("§6§kRoses are red, Diamonds are blue, Creepers are scary, There's one behind you!");
         add("§dhttp://discord.com/invite/S2F4TJhVcV");
         add("§8https://quilt.duckdns.org/");
-        add("§dhttps://map.quilt.duckdns.org/#world:0:0:0:1500:0:0:0:0:perspective");
-        add("§8https://map.quilt.duckdns.org/#world:-1779:203:622:88:1.13:0.41:0:0:perspective");
         add("§dJbeast291, JoJeJo");
         add("§dKarflaget gertrupop flayra. Troflagot e aitrart. §0Trankeboop. §dAskrinol forlaget yarma aquit e flyra e aitrart escimay.");
         add("§d§k1111§r§8Nine new biological subjects designated. Mode §d§k1111§r§8: hunting/analyzing. Sharing subject locations with other agents.");
@@ -125,12 +123,12 @@ public class ChatEvent {
         add("§dStream Facts by §5§kTom§r§d Macdonald featuring §5§kBen§r§d Shapiro on iTunes and §5§kSpotify§r§d :D");
         add("§dYou should've §5§kPicked§r§d Mercy. You should've picked any kind of §5§kSupport§r§d.");
     }};
-    public void ChatSpam() {
+    public static void ChatSpam() {
         Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
             player.sendMessage( RandomMessage(ChatSource) + RandomMessage(ChatMessages));
     });
 }
-    public String RandomMessage(List<String> String){
+    public static String RandomMessage(List<String> String){
         return String.get(RandomUtils.Randomint(String.size() - 1, 0));
     }
 }

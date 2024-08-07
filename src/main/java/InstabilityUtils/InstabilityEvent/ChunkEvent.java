@@ -67,7 +67,7 @@ public class ChunkEvent {
         add(Material.WEEPING_VINES_PLANT);
         add(Material.TWISTING_VINES_PLANT);
     }};
-    public void ChunkLooper(){
+    public static void ChunkLooper(){
         try {
             BukkitTask task = new BukkitRunnable() {
                 @Override
@@ -89,9 +89,9 @@ public class ChunkEvent {
             Bukkit.getLogger().warning("[RiftEvent] Failed to schedule sound loop: " + e.getMessage());
         }
     }
-    public List<Integer> ChunkLoopTasks = new ArrayList<Integer>();
+    public static List<Integer> ChunkLoopTasks = new ArrayList<Integer>();
 
-    public void replaceAllAroundPlayersOnce(){
+    public static void replaceAllAroundPlayersOnce(){
         Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
             RegionUtils.RandomReplaceBlockInRegionWithBlackList((int) Math.round(player.getLocation().x() - 15),
                     (int) Math.round(player.getLocation().y() - 15),
@@ -102,7 +102,7 @@ public class ChunkEvent {
         });
     }
 
-    public void CancelAllTasks() {
+    public static void CancelAllTasks() {
         ChunkLoopTasks.forEach(taskId -> {
             Bukkit.getScheduler().cancelTask(taskId);
         });

@@ -26,6 +26,8 @@ public final class RiftEvent2 extends JavaPlugin {
     private static ChatEvent ChatEventInstance;
     private static ParticleEvent ParticleEventInstance;
 
+    private static TimeEvent TimeEventInstance;
+
     public String WorldName = "RiftEvent";
 
     public final List<Structure> Structures = new ArrayList<Structure>(){{
@@ -35,6 +37,7 @@ public final class RiftEvent2 extends JavaPlugin {
         add(Structure.BASTION_REMNANT);
         add(Structure.END_CITY);
         add(Structure.TRAIL_RUINS);
+        add(Structure.TRIAL_CHAMBERS);
     }};
 
     //How long the rift should stay open, once loaded, in minutes
@@ -58,26 +61,18 @@ public final class RiftEvent2 extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
-        Bukkit.getLogger().info("§6pri§kv§r§6ate§6 §dvoid §r§9Gr§ke§r§9et§r§9Inte§kr§r§9loper§f() { §f§kUSER§r§f.mes§ks§r§fage.sen§kd§r§fDec§ko§r§fded(You Have Been Deemed To Be In Violation Of Cause 30 In The Interdimensional Harvesting Of Resources Act) §6ret§ku§r§6rn§f; §7}");
         saveDefaultConfig();
 
         //Instances
         instance = this;
         WorldUtilsInstance = new WorldUtils();
         InstabilityInstance = new InstabilityHandler();
-        NpcHandlerInstance = new NpcHandler();
-        SoundEventInstance = new SoundEvent();
-        AnimalEventInstance = new AnimalEvent();
-        BlockEventInstance = new BlockEvent(this);//implements listener
-        ChunkEventInstance = new ChunkEvent();
-        ChatEventInstance = new ChatEvent();
-        EffectEventInstance = new EffectEvent();
-        ParticleEventInstance = new ParticleEvent();
 
         //
-        InstabilityInstance.OpenRift();
-        InstabilityInstance.setupBossBar();
+        Bukkit.getLogger().info(String.valueOf(Structure.MANSION));
+        WorldUtils.createStructure(new Location(Bukkit.getWorld("world"), 0, 100, 0), );
+        //InstabilityInstance.OpenRift();
+        //InstabilityInstance.setupBossBar();
 
         //TEMP
 
@@ -102,30 +97,5 @@ public final class RiftEvent2 extends JavaPlugin {
 
     public static WorldUtils getWorldUtilsInstanceInstance() {
         return WorldUtilsInstance;
-    }
-
-    public static NpcHandler getNpcHandlerInstance() {
-        return NpcHandlerInstance;
-    }
-    public static SoundEvent getSoundEventInstance() {
-        return SoundEventInstance;
-    }
-    public static AnimalEvent getAnimalEventInstance() {
-        return AnimalEventInstance;
-    }
-    public static BlockEvent getBlockEventInstance() {
-        return BlockEventInstance;
-    }
-    public static ChunkEvent getChunkEventInstance() {
-        return ChunkEventInstance;
-    }
-    public static ChatEvent getChatEventInstance() {
-        return ChatEventInstance;
-    }
-    public static EffectEvent getEffectEventInstance() {
-        return EffectEventInstance;
-    }
-    public static ParticleEvent getParticleEventInstance() {
-        return ParticleEventInstance;
     }
 }

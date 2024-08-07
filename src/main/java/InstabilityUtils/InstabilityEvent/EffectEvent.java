@@ -40,7 +40,7 @@ public class EffectEvent {
             player.addPotionEffect(new PotionEffect(getRandomEffect(EffectList), duration, amplifier, false, false));
         });
     }
-    public void EffectLooper(){
+    public static void EffectLooper(){
         try {
             BukkitTask task = new BukkitRunnable() {
                 @Override
@@ -55,9 +55,9 @@ public class EffectEvent {
             Bukkit.getLogger().warning("[RiftEvent] Failed to schedule effect loop: " + e.getMessage());
         }
     }
-    public List<Integer> EffectLoopTasks = new ArrayList<Integer>();
+    public static List<Integer> EffectLoopTasks = new ArrayList<Integer>();
 
-    public void CancelAllTasks() {
+    public static void CancelAllTasks() {
         EffectLoopTasks.forEach(taskId -> {
             Bukkit.getScheduler().cancelTask(taskId);
         });

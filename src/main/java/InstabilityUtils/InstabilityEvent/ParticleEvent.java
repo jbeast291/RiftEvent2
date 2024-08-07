@@ -7,7 +7,7 @@ import org.bukkit.*;
 import java.util.List;
 
 public class ParticleEvent {
-    public void SpawnParticlesInRegion(int x, int y, int z, int x2, int y2, int z2, World world, int percentParticles){
+    public static void SpawnParticlesInRegion(int x, int y, int z, int x2, int y2, int z2, World world, int percentParticles){
         int minX = Math.min(x, x2);
         int minY = Math.min(y, y2);
         int minZ = Math.min(z, z2);
@@ -37,5 +37,17 @@ public class ParticleEvent {
                 }
             }
         }
+    }
+    public static void SpawnParticlesOnce() {
+        Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
+            SpawnParticlesInRegion((int) Math.round(player.getLocation().x() - 7),
+                    (int) Math.round(player.getLocation().y() - 7),
+                    (int) Math.round(player.getLocation().z() - 7),
+                    (int) Math.round(player.getLocation().x() + 7),
+                    (int) Math.round(player.getLocation().y() + 7),
+                    (int) Math.round(player.getLocation().z() + 7),
+                    player.getWorld(), 70);
+        });
+
     }
 }

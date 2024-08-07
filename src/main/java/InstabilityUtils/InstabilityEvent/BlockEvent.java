@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public class BlockEvent implements Listener {
     public BlockEvent(RiftEvent2 plugin) { Bukkit.getPluginManager().registerEvents(this, plugin); }
 
-    public boolean active = false;
+    public static boolean active = false;
 
     @EventHandler
     public void onBlockBreakEvent(BlockBreakEvent event) {
@@ -47,11 +47,11 @@ public class BlockEvent implements Listener {
         }
     }
 
-    public void EnableBlockEvent(){
+    public static void EnableBlockEvent(){
         active = true;
     }
 
-    public void ResetBlockEvent(){
+    public static void ResetBlockEvent(){
         active = false;
     }
 }

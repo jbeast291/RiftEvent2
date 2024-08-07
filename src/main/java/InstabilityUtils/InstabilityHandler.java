@@ -1,13 +1,10 @@
 package InstabilityUtils;
 
 import GenericUtils.RandomUtils;
-import InstabilityUtils.InstabilityEvent.AnimalEvent;
+import InstabilityUtils.InstabilityEvent.*;
 import RiftEvent2.RiftEvent2;
 import WorldUtils.WorldUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -15,9 +12,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.sql.Time;
+
 public class InstabilityHandler {
     public BossBar bossBar;
-    int currentInstabilityPercent = RiftEvent2.getInstance().percentInstab;
+    public int currentInstabilityPercent = RiftEvent2.getInstance().percentInstab;
     //    THESE ARE NOT FINAL ONLY WIP IDEA
     //50% one-off minor event
     //60% two-off minor event
@@ -67,12 +66,15 @@ public class InstabilityHandler {
                         }
                         if(currentInstabilityPercent == 80){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 80%");
-                            LoopedRandomMajorEvent();
                             RandomMajorEvent();
                         }
                         if(currentInstabilityPercent == 90){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 90%");
-                            LoopedRandomMinorEvent();
+                            LoopedRandomMajorEvent();
+                        }
+                        if(currentInstabilityPercent == 95){
+                            BroadcastAllInRift("§4⚠ §d§kdWARNING§r§:§d Inst§d§kab§r§ility§7 at 95§d§k%§r§");
+                            //
                         }
                         instabilityTicker();
 
@@ -127,17 +129,20 @@ public class InstabilityHandler {
         });
     }
 
-    //single effect, cave noise, chat
+    //single effect, cave noise, chat, change weather
     public void RandomMinorEvent() {
-         int rand = RandomUtils.Randomint(3, 1);
+         int rand = RandomUtils.Randomint(4, 1);
          if (rand == 1) {
-             RiftEvent2.getSoundEventInstance().PlayCaveSoundOnce();
+            SoundEvent.PlayCaveSoundOnce();
          }
          if (rand == 2) {
-            RiftEvent2.getAnimalEventInstance().AnimalSpawner();
+            AnimalEvent.AnimalSpawner();
          }
          if (rand == 3) {
-             RiftEvent2.getEffectEventInstance().GiveRandomEffectToPlayers(500, 2);
+             EffectEvent.GiveRandomEffectToPlayers(500, 2);
+         }
+         if (rand == 4) {
+             WeatherEvent.Weather();
          }
 
     }
@@ -145,10 +150,13 @@ public class InstabilityHandler {
     public void RandomMajorEvent() {
         int rand = RandomUtils.Randomint(1, 1);
         if (rand == 1) {
-            RiftEvent2.getNpcHandlerInstance().PlaceNpcsAroundPlayer();
+            NpcHandler.PlaceNpcsAroundPlayer();
         }
         if (rand == 2) {
-            RiftEvent2.getChunkEventInstance().replaceAllAroundPlayersOnce();
+            ChunkEvent.replaceAllAroundPlayersOnce();
+        }
+        if (rand == 3) {
+            ParticleEvent.SpawnParticlesOnce();
         }
     }
 
@@ -156,9 +164,9 @@ public class InstabilityHandler {
     Boolean isSoundEventloopActive = false;
     Boolean isAnimalEventloopActive = false;
     //Each cannot be activated twice
-    //Sky/weather changing constantly, Sound looper, inventory spam loop, animal spawn loop
+    //Sky/weather changing constantly, Sound looper, animal spawn loop
     public void LoopedRandomMinorEvent() {
-        int rand = RandomUtils.Randomint(2, 1);
+        /*int rand = RandomUtils.Randomint(2, 1);
         if (rand == 1 && !isSoundEventloopActive) {
             Bukkit.getLogger().info("Sound Looper Active");
             RiftEvent2.getSoundEventInstance().SoundLooper();
@@ -166,8 +174,8 @@ public class InstabilityHandler {
         if (rand == 2 && !isAnimalEventloopActive) {
             Bukkit.getLogger().info("Animal Looper Active");
             RiftEvent2.getAnimalEventInstance().AnimalSpawnerLoop();
-        }
-        /*while(true) {
+        }*/
+        while(true) {
             if(isAnimalEventloopActive && isSoundEventloopActive){
                 Bukkit.getLogger().info("Couldnt start minor event");
                 break;
@@ -175,25 +183,27 @@ public class InstabilityHandler {
             int rand = RandomUtils.Randomint(2, 1);
             if (rand == 1 && !isSoundEventloopActive) {
                 Bukkit.getLogger().info("Sound Looper Active");
-                RiftEvent2.getSoundEventInstance().SoundLooper();
+                SoundEvent.SoundLooper();
                 break;
             }
             if (rand == 2 && !isAnimalEventloopActive) {
                 Bukkit.getLogger().info("Animal Looper Active");
-                RiftEvent2.getAnimalEventInstance().AnimalSpawnerLoop();
+                AnimalEvent.AnimalSpawnerLoop();
                 break;
             }
 
-        }*/
+        }
     }
 
 
     Boolean isChunkEventloopActive = false;
     Boolean isBlockLoopActive = false;
+    Boolean isDayCycleSpeedUpActive = false;
+    Boolean isEffectLoopActive = false;
     //Each cannot be activated twice
-    //Chat Spam, Effect Loop, lighting spam, break block, chunk glitch
+    //Chat Spam, Effect Loop, lighting spam, break block, chunk glitch, Day Cycle Speed up
     public void LoopedRandomMajorEvent() {
-        int rand = RandomUtils.Randomint(2, 1);
+        /*int rand = RandomUtils.Randomint(2, 1);
         if (rand == 1 && !isChunkEventloopActive) {
             Bukkit.getLogger().info("Chunk Looper Active");
             RiftEvent2.getChunkEventInstance().ChunkLooper();
@@ -202,29 +212,43 @@ public class InstabilityHandler {
             Bukkit.getLogger().info("Block Looper Active");
             RiftEvent2.getBlockEventInstance().EnableBlockEvent();
         }
-        /*while(true) {
-            if(isChunkEventloopActive && isBlockLoopActive){
+        if (rand == 3 && !isDayCycleSpeedUpActive){
+
+        }*/
+
+        while(true) {
+            if(isChunkEventloopActive && isBlockLoopActive && isDayCycleSpeedUpActive && isEffectLoopActive){
                 Bukkit.getLogger().info("Couldnt start major event");
                 break;
             }
-            int rand = RandomUtils.Randomint(2, 1);
+            int rand = RandomUtils.Randomint(3, 1);
             if (rand == 1 && !isChunkEventloopActive) {
                 Bukkit.getLogger().info("Chunk Looper Active");
-                RiftEvent2.getChunkEventInstance().ChunkLooper();
+                ChunkEvent.ChunkLooper();
                 break;
             }
             if (rand == 2 && !isBlockLoopActive) {
                 Bukkit.getLogger().info("Block Looper Active");
-                RiftEvent2.getBlockEventInstance().EnableBlockEvent();
+                BlockEvent.EnableBlockEvent();
                 break;
             }
-
-        }*/
+            if (rand == 3 && !isDayCycleSpeedUpActive) {
+                Bukkit.getLogger().info("Day Cycle Speed Up Looper Active");
+                TimeEvent.TimeLooper();
+                break;
+            }
+            if (rand == 4 && isEffectLoopActive) {
+                Bukkit.getLogger().info("Effect Looper Active");
+                EffectEvent.EffectLooper();
+                break;
+            }
+        }
     }
 
     public void SafelyCloseRift(Boolean reopenSafleyAfter) {
         //set game to disabling
         RiftEvent2.getInstance().gameState = 0;
+
         //send players back to regular world
         Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach( player -> {
             bossBar.removePlayer(player);
@@ -233,6 +257,7 @@ public class InstabilityHandler {
             }
             else {
                 FileConfiguration config = RiftEvent2.getInstance().getConfig();
+                //Location spawnLocation = Bukkit.getWorld("world").getSpawnLocation();
                 Location spawnLocation = new Location(Bukkit.getWorld(
                         config.getString("OverWorld-position.spawn-world")),
                         config.getDouble("OverWorld-position.spawn-x"),
@@ -242,13 +267,15 @@ public class InstabilityHandler {
             }
             player.sendMessage("Rift Close Temp Text");
         });
+
         //cancel all current events
-        RiftEvent2.getAnimalEventInstance().CancelAllTasks();
-        RiftEvent2.getSoundEventInstance().CancelAllTasks();
-        RiftEvent2.getChunkEventInstance().CancelAllTasks();
-        RiftEvent2.getBlockEventInstance().ResetBlockEvent();
-        RiftEvent2.getNpcHandlerInstance().CancelAllTasksAndRemoveNpcs();
-        RiftEvent2.getEffectEventInstance().CancelAllTasks();
+        AnimalEvent.CancelAllTasks();
+        SoundEvent.CancelAllTasks();
+        ChunkEvent.CancelAllTasks();
+        BlockEvent.ResetBlockEvent();
+        NpcHandler.CancelAllTasksAndRemoveNpcs();
+        EffectEvent.CancelAllTasks();
+        TimeEvent.CancelAllTasks();
 
         //reset World variables
         RiftEvent2.getInstance().isNether = false;
@@ -262,6 +289,8 @@ public class InstabilityHandler {
         isAnimalEventloopActive = false;
         isChunkEventloopActive = false;
         isBlockLoopActive = false;
+        isDayCycleSpeedUpActive = false;
+        isEffectLoopActive = false;
 
         //change game state to off
         RiftEvent2.getInstance().gameState = -1;

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SoundEvent {
-    public final List<Sound> sounds = new ArrayList<Sound>(){{
+    public static final List<Sound> sounds = new ArrayList<Sound>(){{
         add(Sound.AMBIENT_CAVE);
         add(Sound.AMBIENT_BASALT_DELTAS_ADDITIONS);//ocean monument
         add(Sound.AMBIENT_BASALT_DELTAS_MOOD);
@@ -39,7 +39,7 @@ public class SoundEvent {
         add(Sound.ENTITY_LIGHTNING_BOLT_THUNDER);
     }};
 
-    public void SoundLooper(){
+    public static void SoundLooper(){
         try {
             BukkitTask task = new BukkitRunnable() {
                 @Override
@@ -56,15 +56,15 @@ public class SoundEvent {
             Bukkit.getLogger().warning("[RiftEvent] Failed to schedule sound loop: " + e.getMessage());
         }
     }
-    public List<Integer> SoundLoopTasks = new ArrayList<Integer>();
+    public static List<Integer> SoundLoopTasks = new ArrayList<Integer>();
 
-    public void CancelAllTasks() {
+    public static void CancelAllTasks() {
         SoundLoopTasks.forEach(taskId -> {
             Bukkit.getScheduler().cancelTask(taskId);
         });
         SoundLoopTasks.clear();
     }
-    public void PlayCaveSoundOnce(){
+    public static void PlayCaveSoundOnce(){
         Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach(player -> {
             player.playSound(player, Sound.AMBIENT_CAVE, 1, 1);
         });

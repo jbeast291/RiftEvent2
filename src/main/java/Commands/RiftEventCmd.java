@@ -3,11 +3,17 @@ package Commands;
 import GenericUtils.RandomUtils;
 import InstabilityUtils.InstabilityEvent.AnimalEvent;
 import InstabilityUtils.InstabilityEvent.NpcHandler;
+import InstabilityUtils.InstabilityEvent.ParticleEvent;
+import InstabilityUtils.InstabilityEvent.TimeEvent;
 import RiftEvent2.RiftEvent2;
+import WorldUtils.WorldUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.generator.structure.Structure;
 
 public class RiftEventCmd implements CommandExecutor {
     @Override
@@ -30,19 +36,20 @@ public class RiftEventCmd implements CommandExecutor {
                 sender.sendMessage("The Rift has been reset.");
             }
             if (args[0].equalsIgnoreCase("npc")) {
-                RiftEvent2.getNpcHandlerInstance().PlaceNpcsAroundPlayer();
+                NpcHandler.PlaceNpcsAroundPlayer();
             }
             if (args[0].equalsIgnoreCase("DEBUG")) {
                 Player player = (Player) sender;
-                RiftEvent2.getParticleEventInstance().SpawnParticlesInRegion((int) Math.round(player.getLocation().x() - 15),
+                ParticleEvent.SpawnParticlesInRegion((int) Math.round(player.getLocation().x() - 15),
                         (int) Math.round(player.getLocation().y() - 15),
                         (int) Math.round(player.getLocation().z() - 15),
                         (int) Math.round(player.getLocation().x() + 15),
                         (int) Math.round(player.getLocation().y() + 15),
                         (int) Math.round(player.getLocation().z() + 15), player.getWorld(), 70);
             }
-            if (args[0].equalsIgnoreCase("DEBUG2")) {
-                RiftEvent2.getChatEventInstance().ChatSpam();
+
+            if (args[0].equalsIgnoreCase("DEBUG3")) {
+                WorldUtils.createStructure(new Location(Bukkit.getWorld("world"), 0, 100, 0), Structure.MANSION.getKey());
 
             }
 

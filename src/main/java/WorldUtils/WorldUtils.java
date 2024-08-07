@@ -2,15 +2,19 @@ package WorldUtils;
 
 import GenericUtils.RandomUtils;
 import RiftEvent2.RiftEvent2;
+import net.kyori.adventure.util.TriState;
 import org.bukkit.*;
+import org.bukkit.block.structure.Mirror;
+import org.bukkit.block.structure.StructureRotation;
+import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.structure.Structure;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.StructureSearchResult;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class WorldUtils {
 
@@ -69,18 +73,8 @@ public class WorldUtils {
         Bukkit.unloadWorld(RiftEvent2.getInstance().WorldName, false);//no need to save chunks if the world is being reset
 
         //have to wait to delete folder as unloading the world is not instant, 5 seconds is a generous ammount
-        try {
-            BukkitTask task = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    Bukkit.getLogger().info("Creating new Rift Event World...");
-                    resetRiftEvent(RiftEvent2.getInstance().WorldName, RiftEvent2.getInstance().Structures);
-                }
-            }.runTaskLater(RiftEvent2.getInstance(), 5 * 20);
-        } catch (UnsupportedOperationException e) {
-            // Log a warning message
-            Bukkit.getLogger().warning("[RiftEvent] Failed to schedule Instability Ticker: " + e.getMessage());
-        }
+        Bukkit.getLogger().info("Creating new Rift Event World...");
+        resetRiftEvent(RiftEvent2.getInstance().WorldName, RiftEvent2.getInstance().Structures);
     }
 
 
@@ -89,7 +83,6 @@ public class WorldUtils {
     //WorldType: Amplified, Flat, Large Biomes, Normal
     //ensure world is already **FULLY** unloaded before use
     public void removeAndRecreateWorld(String worldName, World.Environment environment, WorldType worldType){
-
         //delete old world
         //Might want to look into making this async as this operation could cause the server to hang for a moment
         deleteWorld(Paths.get(Bukkit.getWorldContainer().getPath() + File.separator + worldName).toFile());
@@ -97,13 +90,34 @@ public class WorldUtils {
         //Set up the new worlds settings
         WorldCreator NewWorld = new WorldCreator(worldName);
         NewWorld.environment(environment);//overworld, nether, end
+        NewWorld.keepSpawnLoaded(TriState.FALSE);
+
         if(environment == World.Environment.NORMAL){
             NewWorld.type(worldType);//Amplified or normal
         }
 
         //Create the new world based off the settings above
         Bukkit.createWorld(NewWorld);
+    }
+    public static void createStructure(Location location, NamespacedKey structureKey) {
+        org.bukkit.structure.@Nullable Structure structure = Bukkit.getStructureManager().getStructure(structureKey);
 
+        if (structure == null) {
+            structure = Bukkit.getStructureManager().loadStructure(structureKey); // Try and load it if it isn't already
+            if (structure == null) {
+                return; // The structure doesn't exist
+            }
+        }
+
+        structure.place(
+                location,
+                true, // include entities
+                StructureRotation.NONE,
+                Mirror.NONE,
+                -1, // a pallet index. If you don't know what this does, -1 is probably fine. It will pick a random one
+                1.0F, // integrity of the structure. 1.0 means it will place all the blocks in the structure
+                ThreadLocalRandom.current() // or whatever Random instance you want
+        );
     }
 
     public static boolean deleteWorld(File path) {

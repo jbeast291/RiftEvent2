@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NpcHandler {
-    public void generateNPC(Location location, Player player, boolean isHostile) {
+    public static void generateNPC(Location location, Player player, boolean isHostile) {
 
         //Saftey check
         if(player.getWorld() != Bukkit.getWorld(RiftEvent2.getInstance().WorldName))
@@ -75,7 +75,7 @@ public class NpcHandler {
         //move npc
         scheduleNpcTargetToPlayer(npc, player, isHostile);
     }
-    public void scheduleNpcTargetToPlayer(NPC npc, Player player, boolean isHostile){
+    public static void scheduleNpcTargetToPlayer(NPC npc, Player player, boolean isHostile){
         try {
             BukkitTask task = new BukkitRunnable() {
                 @Override
@@ -104,9 +104,9 @@ public class NpcHandler {
         }
     }
 
-    public List<Integer> MoveTasks = new ArrayList<Integer>();
-    public List<Integer> NpcIds = new ArrayList<Integer>();
-    public void CancelAllTasksAndRemoveNpcs() {
+    public static List<Integer> MoveTasks = new ArrayList<Integer>();
+    public static List<Integer> NpcIds = new ArrayList<Integer>();
+    public static void CancelAllTasksAndRemoveNpcs() {
         MoveTasks.forEach(taskId -> {
             Bukkit.getScheduler().cancelTask(taskId);
         });
@@ -116,7 +116,7 @@ public class NpcHandler {
         MoveTasks.clear();
         NpcIds.clear();
     }
-    public void PlaceNpcsAroundPlayer() {
+    public static void PlaceNpcsAroundPlayer() {
 
 
         boolean isHostileToPlayer = false;

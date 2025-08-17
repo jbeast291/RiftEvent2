@@ -4,21 +4,55 @@ import GenericUtils.RandomUtils;
 import RiftEvent2.RiftEvent2;
 import net.kyori.adventure.util.TriState;
 import org.bukkit.*;
-import org.bukkit.block.structure.Mirror;
-import org.bukkit.block.structure.StructureRotation;
-import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.structure.Structure;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.StructureSearchResult;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
-public class WorldUtils {
+public class WorldUtils{
 
-    public void resetRiftEvent(String worldName, List<Structure> Allstructures){
+    //use to safely unload world to ensure the world is fully unloaded before scheduling a reset
+    public void unloadWorldAndSheduleReset() {
+
+        Bukkit.getLogger().info("Unloading Rift Event World... (if exists)");
+
+        //only unload if the world exists
+        if(Bukkit.getWorld(RiftEvent2.getInstance().WorldName) != null) {
+            Bukkit.unloadWorld(RiftEvent2.getInstance().WorldName, false);//no need to save chunks if the world is being reset
+        }
+
+        //have to wait to delete folder as unloading the world is not instant, 2 ticks should be enough
+        try {
+            BukkitTask task = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    resetRiftEvent(RiftEvent2.getInstance().WorldName, RiftEvent2.getInstance().Structures);
+                }
+            }.runTaskLater(RiftEvent2.getInstance(), 2);
+        } catch (UnsupportedOperationException e) {
+            // Log a warning message
+            Bukkit.getLogger().warning("[RiftEvent] Failed to schedule Open Rift: " + e.getMessage());
+        }
+    }
+
+    private static Structure getRandomStructure(List<Structure> Structures){
+        int rand = RandomUtils.Randomint(Structures.size() - 1,0);
+        return Structures.get(rand);
+    }
+
+    private WorldType getRandomWorldType(){
+        int rand = RandomUtils.Randomint(5,0);
+        if(rand <= 3)
+            return WorldType.NORMAL;
+        else
+            return WorldType.AMPLIFIED;
+    }
+
+    private void resetRiftEvent(String worldName, List<Structure> Allstructures){
         RiftEvent2.getInstance().gameState = 0;
 
         //get the random structure
@@ -43,7 +77,24 @@ public class WorldUtils {
         WorldType worldType = getRandomWorldType();
 
         //reset world and create it
-        removeAndRecreateWorld(worldName, SelectedEnviroment, worldType);
+        deleteWorldAsyncAndRecreateSync(Paths.get(Bukkit.getWorldContainer().getPath() + File.separator + worldName).toFile(), worldName, SelectedEnviroment, worldType, SelectedStructure);
+    }
+
+
+
+    //Environment: overworld, nether, end
+    //WorldType: Amplified, Flat, Large Biomes, Normal
+    //ensure world is already **FULLY** unloaded before use
+    private static void CreateWorld(String worldName, World.Environment environment, WorldType worldType, Structure SelectedStructure){
+
+        //Set up the new worlds settings
+        WorldCreator NewWorld = new WorldCreator(worldName);
+        NewWorld.environment(environment);//overworld, nether, end
+        NewWorld.keepSpawnLoaded(TriState.FALSE);//needed to stop server hang as the entire spawn of new world will try to generate without it
+        NewWorld.type(worldType);
+
+        //Create the new world based off the settings above
+        Bukkit.createWorld(NewWorld);
 
         //Find Structure
         Location StructureLoc = getStructureLocation(SelectedStructure, Bukkit.getWorld(worldName));
@@ -53,6 +104,8 @@ public class WorldUtils {
         RiftEvent2.getInstabilityUtilInstance().makeSafePlatform(StructureLoc);
 
         RiftEvent2.getInstabilityUtilInstance().instabilityTicker();
+
+        RiftEvent2.getInstabilityUtilInstance().setupBossBar();
 
         centerWorldBorderAndWorldSpawn(RiftEvent2.getInstance().RiftCenter, 500);
 
@@ -64,63 +117,38 @@ public class WorldUtils {
         Bukkit.getLogger().info("World Type:" + worldType);
         Bukkit.getLogger().info("Structure Location: " + StructureLoc);
 
+
     }
 
-    //use to safely unload world to ensure the world is fully unloaded before scheduling a reset
-    public void unloadWorldAndSheduleReset() {
-
-        Bukkit.getLogger().info("Unloading Rift Event World...");
-        Bukkit.unloadWorld(RiftEvent2.getInstance().WorldName, false);//no need to save chunks if the world is being reset
-
-        //have to wait to delete folder as unloading the world is not instant, 5 seconds is a generous ammount
-        Bukkit.getLogger().info("Creating new Rift Event World...");
-        resetRiftEvent(RiftEvent2.getInstance().WorldName, RiftEvent2.getInstance().Structures);
-    }
-
-
-
-    //Environment: overworld, nether, end
-    //WorldType: Amplified, Flat, Large Biomes, Normal
-    //ensure world is already **FULLY** unloaded before use
-    public void removeAndRecreateWorld(String worldName, World.Environment environment, WorldType worldType){
-        //delete old world
-        //Might want to look into making this async as this operation could cause the server to hang for a moment
-        deleteWorld(Paths.get(Bukkit.getWorldContainer().getPath() + File.separator + worldName).toFile());
-
-        //Set up the new worlds settings
-        WorldCreator NewWorld = new WorldCreator(worldName);
-        NewWorld.environment(environment);//overworld, nether, end
-        NewWorld.keepSpawnLoaded(TriState.FALSE);
-
-        if(environment == World.Environment.NORMAL){
-            NewWorld.type(worldType);//Amplified or normal
+    private static void deleteWorldAsyncAndRecreateSync(File path, String worldName, World.Environment environment, WorldType worldType, Structure SelectedStructure) {
+        try {
+            BukkitTask task = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Bukkit.getLogger().info("Deleting Old Rift Event Files (if existent)");
+                    deleteWorld(path);
+                    //then create the world after files deleted
+                    try {
+                        BukkitTask task = new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                CreateWorld(worldName, environment, worldType, SelectedStructure);
+                            }
+                        }.runTask(RiftEvent2.getInstance());
+                    } catch (UnsupportedOperationException e) {
+                        // Log a warning message
+                        Bukkit.getLogger().warning("[RiftEvent] Failed to schedule world creation: " + e.getMessage());
+                    }
+                }
+            }.runTaskAsynchronously(RiftEvent2.getInstance());
+        } catch (UnsupportedOperationException e) {
+            // Log a warning message
+            Bukkit.getLogger().warning("[RiftEvent] Failed to schedule old world file deletion: " + e.getMessage());
         }
-
-        //Create the new world based off the settings above
-        Bukkit.createWorld(NewWorld);
-    }
-    public static void createStructure(Location location, NamespacedKey structureKey) {
-        org.bukkit.structure.@Nullable Structure structure = Bukkit.getStructureManager().getStructure(structureKey);
-
-        if (structure == null) {
-            structure = Bukkit.getStructureManager().loadStructure(structureKey); // Try and load it if it isn't already
-            if (structure == null) {
-                return; // The structure doesn't exist
-            }
-        }
-
-        structure.place(
-                location,
-                true, // include entities
-                StructureRotation.NONE,
-                Mirror.NONE,
-                -1, // a pallet index. If you don't know what this does, -1 is probably fine. It will pick a random one
-                1.0F, // integrity of the structure. 1.0 means it will place all the blocks in the structure
-                ThreadLocalRandom.current() // or whatever Random instance you want
-        );
     }
 
-    public static boolean deleteWorld(File path) {
+    private static void deleteWorld(File path) {
+
         if(path.exists()) {
             File files[] = path.listFiles();
             for(int i=0; i<files.length; i++) {
@@ -131,9 +159,8 @@ public class WorldUtils {
                 }
             }
         }
-        return(path.delete());
     }
-    public static void centerWorldBorderAndWorldSpawn(Location centerLoc, int WBWidth) {
+    private static void centerWorldBorderAndWorldSpawn(Location centerLoc, int WBWidth) {
         World world = centerLoc.getWorld();
         world.getWorldBorder().setCenter(centerLoc);
         world.getWorldBorder().setSize(WBWidth, 0);
@@ -151,18 +178,5 @@ public class WorldUtils {
             return result.getLocation().toHighestLocation();
         }
         return null;
-    }
-
-    public static Structure getRandomStructure(List<Structure> Structures){
-        int rand = RandomUtils.Randomint(Structures.size() - 1,0);
-        return Structures.get(rand);
-    }
-
-    public WorldType getRandomWorldType(){
-        int rand = RandomUtils.Randomint(5,0);
-        if(rand <= 3)
-            return WorldType.NORMAL;
-        else
-            return WorldType.AMPLIFIED;
     }
 }

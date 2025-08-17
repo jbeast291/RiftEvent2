@@ -9,11 +9,20 @@ import RiftEvent2.RiftEvent2;
 import WorldUtils.WorldUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
+import org.bukkit.block.structure.Mirror;
+import org.bukkit.block.structure.StructureRotation;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.structure.Structure;
+import org.bukkit.generator.structure.StructureType;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
+
+import java.util.Objects;
+import java.util.Random;
 
 public class RiftEventCmd implements CommandExecutor {
     @Override
@@ -47,12 +56,18 @@ public class RiftEventCmd implements CommandExecutor {
                         (int) Math.round(player.getLocation().y() + 15),
                         (int) Math.round(player.getLocation().z() + 15), player.getWorld(), 70);
             }
+            if (args[0].equalsIgnoreCase("DEBUG2")) {
+                org.bukkit.structure.Structure s = Bukkit.getStructureManager().loadStructure(Objects.requireNonNull(NamespacedKey.fromString("minecraft:woodland_mansion/2x2_b4")));
 
-            if (args[0].equalsIgnoreCase("DEBUG3")) {
-                WorldUtils.createStructure(new Location(Bukkit.getWorld("world"), 0, 100, 0), Structure.MANSION.getKey());
-
+                Player player = (Player) sender;
+                try {
+                    s.place(player.getLocation(), true, StructureRotation.NONE, Mirror.NONE, 0, 1, Random.class.newInstance());
+                } catch (InstantiationException ex) {
+                    throw new RuntimeException(ex);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
             }
-
 
         }
         return true;

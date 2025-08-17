@@ -20,10 +20,10 @@ public class TimeEvent {
                 public void run() {
                     int rand = RandomUtils.Randomint(2, 1);
                     if(rand == 1){
-                        currentTime-=100 + RiftEvent2.getInstabilityUtilInstance().currentInstabilityPercent * 5;
+                        currentTime-=100 + RiftEvent2.getInstance().percentInstab * 5;
                     }
                     if(rand == 2){
-                        currentTime+=100 + RiftEvent2.getInstabilityUtilInstance().currentInstabilityPercent * 5;
+                        currentTime+=100 + RiftEvent2.getInstance().percentInstab * 5;
                     }
 
 

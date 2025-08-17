@@ -1,10 +1,10 @@
 package RiftEvent2;
 
 import Commands.RiftEventCmd;
+import Events.PlayerEvents;
 import InstabilityUtils.InstabilityEvent.*;
 import InstabilityUtils.InstabilityHandler;
 import WorldUtils.WorldUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.generator.structure.Structure;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,6 +21,7 @@ public final class RiftEvent2 extends JavaPlugin {
     private static SoundEvent SoundEventInstance;
     private static AnimalEvent AnimalEventInstance;
     private static BlockEvent BlockEventInstance;
+    private static PlayerEvents PlayerEventInstance;
     private static ChunkEvent ChunkEventInstance;
     private static EffectEvent EffectEventInstance;
     private static ChatEvent ChatEventInstance;
@@ -41,7 +42,7 @@ public final class RiftEvent2 extends JavaPlugin {
     }};
 
     //How long the rift should stay open, once loaded, in minutes
-    public static int TimeRiftOpenMin = 2;
+    public static int TimeRiftOpenMin = 20;
 
     //Current Rift info
     //-----------
@@ -69,8 +70,6 @@ public final class RiftEvent2 extends JavaPlugin {
         InstabilityInstance = new InstabilityHandler();
 
         //
-        Bukkit.getLogger().info(String.valueOf(Structure.MANSION));
-        WorldUtils.createStructure(new Location(Bukkit.getWorld("world"), 0, 100, 0), );
         //InstabilityInstance.OpenRift();
         //InstabilityInstance.setupBossBar();
 
@@ -78,6 +77,7 @@ public final class RiftEvent2 extends JavaPlugin {
 
         //commands
         getCommand("riftevent").setExecutor(new RiftEventCmd());
+
 
     }
 

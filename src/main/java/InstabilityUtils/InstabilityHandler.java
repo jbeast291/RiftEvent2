@@ -16,7 +16,6 @@ import java.sql.Time;
 
 public class InstabilityHandler {
     public BossBar bossBar;
-    public int currentInstabilityPercent = RiftEvent2.getInstance().percentInstab;
     //    THESE ARE NOT FINAL ONLY WIP IDEA
     //50% one-off minor event
     //60% two-off minor event
@@ -28,59 +27,64 @@ public class InstabilityHandler {
             BukkitTask task = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if(currentInstabilityPercent != 100){
-                        currentInstabilityPercent++;
+                    if(RiftEvent2.getInstance().percentInstab != 100){
+                        RiftEvent2.getInstance().percentInstab++;
 
-                        bossBar.setProgress((double) currentInstabilityPercent / 100);
-                        bossBar.setTitle("§4⚠§d Instability: §b%" + currentInstabilityPercent + " §4⚠");
+                        bossBar.setProgress((double) RiftEvent2.getInstance().percentInstab / 100);
+                        bossBar.setTitle("§4⚠§d Instability: §b%" + RiftEvent2.getInstance().percentInstab + " §4⚠");
 
-                        //Bukkit.getLogger().info("[RiftEvent] instab:" + currentInstabilityPercent);
-                        if(currentInstabilityPercent == 10){
+
+                        //Bukkit.getLogger().info("[RiftEvent] instab:" + RiftEvent2.getInstance().percentInstab);
+                        if(RiftEvent2.getInstance().percentInstab == 10){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 10%");
                             RandomMinorEvent();
                         }
-                        if(currentInstabilityPercent == 20){
+                        if(RiftEvent2.getInstance().percentInstab == 20){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 20%");
                             RandomMinorEvent();
                         }
-                        if(currentInstabilityPercent == 30){
+                        if(RiftEvent2.getInstance().percentInstab == 30){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 30%");
                             RandomMinorEvent();
                         }
-                        if(currentInstabilityPercent == 40){
+                        if(RiftEvent2.getInstance().percentInstab == 40){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 40%");
                             RandomMinorEvent();
                         }
-                        if(currentInstabilityPercent == 50){
+                        if(RiftEvent2.getInstance().percentInstab == 50){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 50%");
-                            LoopedRandomMinorEvent();
+                            RandomMajorEvent();
                             RandomMinorEvent();
                         }
-                        if(currentInstabilityPercent == 60){
+                        if(RiftEvent2.getInstance().percentInstab == 60){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 60%");
                             LoopedRandomMinorEvent();
                         }
-                        if(currentInstabilityPercent == 70){
+                        if(RiftEvent2.getInstance().percentInstab == 70){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 70%");
                             LoopedRandomMinorEvent();
                         }
-                        if(currentInstabilityPercent == 80){
+                        if(RiftEvent2.getInstance().percentInstab == 80){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 80%");
                             RandomMajorEvent();
                         }
-                        if(currentInstabilityPercent == 90){
+                        if(RiftEvent2.getInstance().percentInstab == 90){
                             BroadcastAllInRift("§4⚠ WARNING:§d Instability§7 at 90%");
                             LoopedRandomMajorEvent();
                         }
-                        if(currentInstabilityPercent == 95){
+                        if(RiftEvent2.getInstance().percentInstab == 95){
                             BroadcastAllInRift("§4⚠ §d§kdWARNING§r§:§d Inst§d§kab§r§ility§7 at 95§d§k%§r§");
                             //
+                            bossBar.setStyle(BarStyle.SEGMENTED_10);
+                        }
+                        if(RiftEvent2.getInstance().percentInstab == 100){
+                            BroadcastAllInRift("§4⚠ §d§kdWARNING§r§:§d Inst§d§kab§r§ility§7 at 95§d§k%§r§");
+                            SafelyCloseRift(true);
                         }
                         instabilityTicker();
-
                     }
                     else {
-                        Bukkit.getLogger().info("[RiftEvent] DONE:" + currentInstabilityPercent);
+                        Bukkit.getLogger().info("[RiftEvent] DONE:" + RiftEvent2.getInstance().percentInstab);
                     }
                 }
             }.runTaskLater(RiftEvent2.getInstance(), ((long) RiftEvent2.TimeRiftOpenMin * 60 * 20)/ 100);
@@ -90,7 +94,7 @@ public class InstabilityHandler {
         }
     }
     public void setupBossBar(){
-        bossBar = RiftEvent2.getInstance().getServer().createBossBar("§4⚠§5 Instability: % " + currentInstabilityPercent + " §4⚠" , BarColor.PURPLE, BarStyle.SEGMENTED_6);
+        bossBar = RiftEvent2.getInstance().getServer().createBossBar("§4⚠§5 Instability: % " + RiftEvent2.getInstance().percentInstab + " §4⚠" , BarColor.PURPLE, BarStyle.SEGMENTED_6);
         bossBar.setVisible(true);
     }
     public void makeSafePlatform(Location startloc){
@@ -250,23 +254,25 @@ public class InstabilityHandler {
         RiftEvent2.getInstance().gameState = 0;
 
         //send players back to regular world
-        Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach( player -> {
-            bossBar.removePlayer(player);
-            if(player.getRespawnLocation() != null) {
-                player.teleport(player.getRespawnLocation());
-            }
-            else {
-                FileConfiguration config = RiftEvent2.getInstance().getConfig();
-                //Location spawnLocation = Bukkit.getWorld("world").getSpawnLocation();
-                Location spawnLocation = new Location(Bukkit.getWorld(
-                        config.getString("OverWorld-position.spawn-world")),
-                        config.getDouble("OverWorld-position.spawn-x"),
-                        config.getDouble("OverWorld-position.spawn-y"),
-                        config.getDouble("OverWorld-position.spawn-z"));
-                player.teleport(spawnLocation);
-            }
-            player.sendMessage("Rift Close Temp Text");
-        });
+        if (Bukkit.getWorld(RiftEvent2.getInstance().WorldName) != null) {
+            Bukkit.getWorld(RiftEvent2.getInstance().WorldName).getPlayers().forEach( player -> {
+                bossBar.removePlayer(player);
+                if(player.getRespawnLocation() != null) {
+                    player.teleport(player.getRespawnLocation());
+                }
+                else {
+                    FileConfiguration config = RiftEvent2.getInstance().getConfig();
+                    //Location spawnLocation = Bukkit.getWorld("world").getSpawnLocation();
+                    Location spawnLocation = new Location(Bukkit.getWorld(
+                            config.getString("OverWorld-position.spawn-world")),
+                            config.getDouble("OverWorld-position.spawn-x"),
+                            config.getDouble("OverWorld-position.spawn-y"),
+                            config.getDouble("OverWorld-position.spawn-z"));
+                    player.teleport(spawnLocation);
+                }
+                player.sendMessage("Rift Close Temp Text");
+            });
+        }
 
         //cancel all current events
         AnimalEvent.CancelAllTasks();
